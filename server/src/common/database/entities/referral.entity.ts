@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "ty
 import { Wallet } from "./wallet.entity";
 import { Transaction } from "./transaction.entity";
 import { CoreEntity } from "./core.entity";
+import { Product } from "./product.entity";
 
 @Entity({ name: "Referral" })
 export class Referral extends CoreEntity {
@@ -11,6 +12,6 @@ export class Referral extends CoreEntity {
     @ManyToOne(() => Wallet)
     user: Wallet;
 
-    @ManyToOne(() => Transaction)
-    transaction: Transaction;
+    @ManyToOne(() => Product)
+    product: Product;
 }

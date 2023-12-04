@@ -10,6 +10,8 @@ import { Referral } from "./common/database/entities/referral.entity";
 import { Transaction } from "./common/database/entities/transaction.entity";
 import { Wallet } from "./common/database/entities/wallet.entity";
 import { WalletModule } from "./wallet/wallet.module";
+import { ReferralModule } from "./referral/referral.module";
+import { ProductModule } from "./product/product.module";
 
 @Module({
     imports: [
@@ -28,6 +30,8 @@ import { WalletModule } from "./wallet/wallet.module";
         }),
         TypeOrmModule.forFeature([Product, Referral, Transaction, Wallet]),
         WalletModule,
+        ReferralModule,
+        ProductModule,
     ],
     controllers: [],
     providers: [],

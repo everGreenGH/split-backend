@@ -21,7 +21,7 @@ export class Transaction extends CoreEntity {
     incentiveTokenAddress: string;
 
     @Column()
-    incentiveTokenAmountPerTx: number;
+    incentiveTokenAmountPerTx: string;
 
     @ManyToOne(() => Product, (product) => product.transactions)
     product: Product;
