@@ -7,9 +7,9 @@ import * as path from "path";
 import { LoggerMiddleware } from "./common/loggers/logger.middleware";
 import { Product } from "./common/database/entities/product.entity";
 import { Referral } from "./common/database/entities/referral.entity";
-import { Role } from "./common/database/entities/role.entity";
 import { Transaction } from "./common/database/entities/transaction.entity";
 import { Wallet } from "./common/database/entities/wallet.entity";
+import { WalletModule } from "./wallet/wallet.module";
 
 @Module({
     imports: [
@@ -26,7 +26,8 @@ import { Wallet } from "./common/database/entities/wallet.entity";
         TypeOrmModule.forRoot({
             ...postgresConfig().postgres,
         }),
-        TypeOrmModule.forFeature([Product, Referral, Role, Transaction, Wallet]),
+        TypeOrmModule.forFeature([Product, Referral, Transaction, Wallet]),
+        WalletModule,
     ],
     controllers: [],
     providers: [],

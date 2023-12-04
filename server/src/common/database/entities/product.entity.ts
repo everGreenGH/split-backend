@@ -1,12 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Transaction } from "./transaction.entity";
 import { SupportedNetworks } from "src/common/constants/supported-networks";
+import { CoreEntity } from "./core.entity";
 
 @Entity({ name: "Product" })
-export class Product {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
-
+export class Product extends CoreEntity {
     @Column()
     name: string;
 

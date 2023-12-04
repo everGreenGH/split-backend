@@ -2,7 +2,6 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import * as cookieParser from "cookie-parser";
 
 function buildSwagger(app: INestApplication) {
     const docs = new DocumentBuilder()
