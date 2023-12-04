@@ -6,7 +6,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 function buildSwagger(app: INestApplication) {
     const docs = new DocumentBuilder()
         .setTitle("Split Server")
-        .setDescription("API Descriptions")
+        .setDescription("Split API Descriptions")
         .setVersion("1.0")
         .build();
 

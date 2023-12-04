@@ -10,3 +10,7 @@ export class AddReferralReq {
     @IsEthereumAddress()
     referralProviderAddress: string;
 }
+
+export class AddReferralRes {
+    updated: boolean;
+}

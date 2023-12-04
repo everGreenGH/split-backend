@@ -8,12 +8,13 @@ export class ReferralRepository {
     constructor(@InjectRepository(Referral) private readonly _referralRepository: Repository<Referral>) {}
 
     async getExistingReferral(userAddress: string, referralProviderAddress: string): Promise<Referral> {
+        console.log(userAddress, referralProviderAddress);
         return await this._referralRepository
             .createQueryBuilder("referral")
-            .leftJoinAndSelect("referral.referralProvider", "referralProvider")
+            .leftJoinAndSelect("referral.referralProvider", "provider")
             .leftJoinAndSelect("referral.user", "user")
-            .where("user.address = :userAddress", { userAddress })
-            .andWhere("referralProvider.address = :referralProviderAddress", { referralProviderAddress })
+            .where("provider.address = :referralProviderAddress", { referralProviderAddress })
+            .andWhere("user.address = :userAddress", { userAddress })
             .getOne();
     }
 

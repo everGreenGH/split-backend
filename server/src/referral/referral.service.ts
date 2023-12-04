@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { WalletService } from "src/wallet/wallet.service";
-import { AddReferralReq } from "./referral.dtos";
+import { AddReferralReq, AddReferralRes } from "./referral.dtos";
 import { ProductService } from "src/product/product.service";
 import { ReferralRepository } from "./referral.repository";
 
@@ -12,7 +12,7 @@ export class ReferralService {
         private readonly _productService: ProductService,
     ) {}
 
-    public async addReferral(req: AddReferralReq) {
+    public async addReferral(req: AddReferralReq): Promise<AddReferralRes> {
         try {
             const product = await this._productService.findProduct(req.productId);
             if (!product) {
@@ -20,28 +20,28 @@ export class ReferralService {
             }
 
             const existingReferral = await this._referralRepository.getExistingReferral(
-                req.userAddress,
-                req.referralProviderAddress,
+                req.userAddress.toLowerCase(),
+                req.referralProviderAddress.toLowerCase(),
             );
 
             if (existingReferral) {
                 // TODO: Response 어떻게 할 것인지 프론트랑 맞추기
-                throw new BadRequestException("Referral exists", "ADD_REFERRAL_ERROR");
+                return { updated: false };
             }
 
-            const referralProviderWallet = await this._walletService.findWalletByAddress(req.userAddress);
+            const referralProviderWallet = await this._walletService.findWalletByAddress(req.referralProviderAddress);
             if (!referralProviderWallet) {
                 throw new BadRequestException("Invalid referralProvider address", "ADD_REFERRAL_ERROR");
             }
             const { wallet: userWallet } = await this._walletService.findOrCreateWallet(req.userAddress);
 
-            const newReferral = await this._referralRepository.createReferral({
+            await this._referralRepository.createReferral({
                 referralProvider: referralProviderWallet,
                 user: userWallet,
                 product,
             });
 
-            return newReferral;
+            return { updated: true };
         } catch (error) {
             if (error instanceof BadRequestException) {
                 throw error;
