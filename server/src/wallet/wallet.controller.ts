@@ -18,6 +18,6 @@ export class WalletController {
     })
     @ApiOkResponse({ type: Wallet, description: "Wallet 객체를 반환" })
     async createWallet(@Body() req: CreateWalletReq) {
-        return this.walletService.findOrCreateWallet(req.walletAddr);
+        return this.walletService.findOrCreateWallet(req.address);
     }
 }
