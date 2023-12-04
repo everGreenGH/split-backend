@@ -5,6 +5,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import postgresConfig from "./common/config/postgres.config";
 import * as path from "path";
 import { LoggerMiddleware } from "./common/loggers/logger.middleware";
+import { Product } from "./common/database/entities/product.entity";
+import { Referral } from "./common/database/entities/referral.entity";
+import { Transaction } from "./common/database/entities/transaction.entity";
+import { Wallet } from "./common/database/entities/wallet.entity";
+import { WalletModule } from "./wallet/wallet.module";
+import { ReferralModule } from "./referral/referral.module";
+import { ProductModule } from "./product/product.module";
 
 @Module({
     imports: [
@@ -21,7 +28,10 @@ import { LoggerMiddleware } from "./common/loggers/logger.middleware";
         TypeOrmModule.forRoot({
             ...postgresConfig().postgres,
         }),
-        TypeOrmModule.forFeature([]),
+        TypeOrmModule.forFeature([Product, Referral, Transaction, Wallet]),
+        WalletModule,
+        ReferralModule,
+        ProductModule,
     ],
     controllers: [],
     providers: [],
