@@ -18,20 +18,19 @@ export class Product extends CoreEntity {
     network: SupportedNetworks[];
 
     @Column()
-    label: string;
-
-    @Column()
     description: string;
 
-    @Column()
+    @Column({ nullable: true })
     poolAddress: string;
 
-    @Column()
+    @Column({ nullable: true })
     apiKey: string;
 
-    @Column()
+    @Column({ default: false })
     isKeyIntegrated: boolean;
 
-    @OneToMany(() => Transaction, (transaction) => transaction.product)
+    @OneToMany(() => Transaction, (transaction) => transaction.product, { cascade: true, eager: true })
     transactions: Transaction[];
+
+    // TODO: 와이어프레임에 따라 추가
 }
