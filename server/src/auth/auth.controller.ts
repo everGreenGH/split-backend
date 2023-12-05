@@ -1,10 +1,10 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { ConfigService } from "@nestjs/config";
-import { SignInReq, SignInRes, GetNonceRes, GetNonceReq } from "./auth.dtos";
+import { SignInReq, SignInRes, GetNonceRes, GetNonceReq, RefreshReq } from "./auth.dtos";
 import { SkipThrottle } from "@nestjs/throttler";
-import { ApiBody, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+import { ApiOkResponse, ApiOperation, ApiQuery } from "@nestjs/swagger";
 
 @Controller("auth")
 export class AuthController {
@@ -23,11 +23,11 @@ export class AuthController {
     @SkipThrottle()
     @Post("sign")
     @HttpCode(HttpStatus.OK)
-    @ApiBody({ type: SignInReq })
+    @ApiQuery({ type: SignInReq })
     @ApiOperation({
         summary: "클라이언트에서 지갑 서명을 받아 로그인 후, 인증 토큰을 반환",
     })
-    @ApiOkResponse({ type: SignInRes, description: "회원가입 / 로그인 여부, Wallet 객체, authToken을 반환" })
+    @ApiOkResponse({ type: SignInRes, description: "Wallet 객체, authToken을 반환" })
     async signIn(@Body() req: SignInReq, @Res() res: Response) {
         const walletRes = await this._authService.signIn(req);
 
@@ -37,21 +37,20 @@ export class AuthController {
         return res.json(walletRes);
     }
 
-    // @SkipThrottle()
-    // @Get("refresh")
-    // @HttpCode(HttpStatus.OK)
-    // async refresh(@Req() req: Request, @Res() res: Response) {
-    //     try {
-    //         const newAccessToken = await this._authService.refresh(req.cookies.refreshToken);
-    //         res.cookie("accessToken", newAccessToken, {
-    //             httpOnly: true,
-    //         });
-    //         return res.send();
-    //     } catch (err) {
-    //         res.clearCookie("accessToken");
-    //         res.clearCookie("refreshToken");
-    //         res.clearCookie("isLoggedIn");
-    //         throw new UnauthorizedException();
-    //     }
-    // }
+    @SkipThrottle()
+    @Get("refresh")
+    @ApiQuery({ type: RefreshReq })
+    @ApiOperation({
+        summary: "AccessToken 만료 시 재발급",
+    })
+    @HttpCode(HttpStatus.OK)
+    async refresh(@Query() query: RefreshReq, @Res() res: Response) {
+        try {
+            const newAccessToken = await this._authService.refresh(query.refreshToken);
+            res.setHeader("Authorization", "Bearer " + newAccessToken);
+            return res.send();
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
+    }
 }

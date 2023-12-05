@@ -27,3 +27,7 @@ export class SignInRes {
     wallet: Wallet;
     authTokens: AuthTokens;
 }
+
+export class RefreshReq {
+    refreshToken: string;
+}

@@ -17,10 +17,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: PayloadDto, done: VerifiedCallback) {
-        const user = await this._walletService.findWalletByAddress(payload.address);
-        if (!user) {
+        const wallet = await this._walletService.findWalletByAddress(payload.address);
+        if (!wallet) {
             return done(new UnauthorizedException({ message: "Wallet not exist" }), false);
         }
-        return done(null, user);
+        return done(null, wallet);
     }
 }
