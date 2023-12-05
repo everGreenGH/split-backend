@@ -1,0 +1,44 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    width: 200px;
+    height: 60px;
+    border: none;
+    border-radius: 10px;
+    background: #e19f79;
+    color: #000;
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      background: #c9632a;
+    }
+
+    &:disabled {
+      background: #d7d7d7;
+      color: #8b8b8b;
+    }
+  }
+}
+
+.label {
+  height: 20px;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 10px;
+}
