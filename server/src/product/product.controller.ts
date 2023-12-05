@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Param, HttpStatus, HttpCode, Query, UseGuards, Req, Body } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { CheckPoolDeployedReq, CreateProductReq } from "./product.dtos";
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam } from "@nestjs/swagger";
 import { JWTGuard } from "src/common/guards/jwt.guard";
 import { Request } from "express";
 
@@ -25,7 +25,6 @@ export class ProductController {
     @Post("deploy")
     @HttpCode(HttpStatus.OK)
     @ApiBearerAuth()
-    @ApiBody({ type: CheckPoolDeployedReq })
     @ApiOperation({
         summary: "컨트랙트 배포 후 풀 주소 정보를 업데이트하고, ApiKey를 생성하여 저장 후 반환",
     })

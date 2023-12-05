@@ -4,7 +4,7 @@ import { Response } from "express";
 import { ConfigService } from "@nestjs/config";
 import { SignInReq, SignInRes, GetNonceRes, GetNonceReq, RefreshReq } from "./auth.dtos";
 import { SkipThrottle } from "@nestjs/throttler";
-import { ApiOkResponse, ApiOperation, ApiQuery } from "@nestjs/swagger";
+import { ApiOkResponse, ApiOperation } from "@nestjs/swagger";
 
 @Controller("auth")
 export class AuthController {
@@ -14,7 +14,7 @@ export class AuthController {
     @Get("nonce")
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: "siwe sign에 필요한 논스 생성",
+        summary: "SIWE 서명에 필요한 논스 생성",
     })
     async getNonce(@Query() query: GetNonceReq): Promise<GetNonceRes> {
         return this._authService.getNonce(query);
@@ -23,7 +23,6 @@ export class AuthController {
     @SkipThrottle()
     @Post("sign")
     @HttpCode(HttpStatus.OK)
-    @ApiQuery({ type: SignInReq })
     @ApiOperation({
         summary: "클라이언트에서 지갑 서명을 받아 로그인 후, 인증 토큰을 반환",
     })
@@ -39,7 +38,6 @@ export class AuthController {
 
     @SkipThrottle()
     @Get("refresh")
-    @ApiQuery({ type: RefreshReq })
     @ApiOperation({
         summary: "AccessToken 만료 시 재발급",
     })

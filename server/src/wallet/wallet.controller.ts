@@ -1,7 +1,7 @@
 import { Controller, HttpCode, HttpStatus, Post, Query } from "@nestjs/common";
 import { WalletService } from "./wallet.service";
 import { CreateWalletReq, CreateWalletRes } from "./wallet.dtos";
-import { ApiOkResponse, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { ApiOkResponse, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { Wallet } from "src/common/database/entities/wallet.entity";
 
@@ -12,7 +12,6 @@ export class WalletController {
     @SkipThrottle()
     @Post()
     @HttpCode(HttpStatus.OK)
-    @ApiQuery({ type: CreateWalletReq })
     @ApiResponse({ type: CreateWalletRes })
     @ApiOperation({
         summary: "최초 연결 시 지갑 주소를 데이터베이스에 저장, 최초 연결 아닐 시 지갑 객체 반환",
