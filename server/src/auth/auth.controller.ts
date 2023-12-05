@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus, Post, Query, Res, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
 import { ConfigService } from "@nestjs/config";
@@ -25,11 +25,11 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @ApiBody({ type: SignInReq })
     @ApiOperation({
-        summary: "클라이언트에서 지갑 주소를 받아 데이터베이스에 저장(또는 확인), 인증 토큰을 반환",
+        summary: "클라이언트에서 지갑 서명을 받아 로그인 후, 인증 토큰을 반환",
     })
     @ApiOkResponse({ type: SignInRes, description: "회원가입 / 로그인 여부, Wallet 객체, authToken을 반환" })
-    async signIn(@Query() query: SignInReq, @Res() res: Response) {
-        const walletRes = await this._authService.signIn(query);
+    async signIn(@Body() req: SignInReq, @Res() res: Response) {
+        const walletRes = await this._authService.signIn(req);
 
         res.setHeader("Authorization", "Bearer " + walletRes.authTokens.accessToken);
         res.setHeader("RefreshToken", "Bearer " + walletRes.authTokens.refreshToken);

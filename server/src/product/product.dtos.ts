@@ -45,3 +45,8 @@ export class TransactionReq {
     @IsString()
     incentiveTokenAmountPerTx: string;
 }
+
+export class CheckPoolDeployedReq {
+    @IsNumber()
+    id: number;
+}

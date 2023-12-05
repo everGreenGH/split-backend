@@ -1,5 +1,5 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { CreateProductReq } from "./product.dtos";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { CheckPoolDeployedReq, CreateProductReq } from "./product.dtos";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "src/common/database/entities/product.entity";
 import { DataSource, Repository } from "typeorm";
@@ -23,6 +23,16 @@ export class ProductService {
         }
     }
 
+    // async checkPoolDeployed(req: CheckPoolDeployedReq): Promise<Product> {
+    //     try {
+    //         const product = this.findProductById(req.id);
+
+    //         /*
+    //             wallet
+    //         */
+    //     }
+    // }
+
     async findAllProducts() {
         try {
             const products = await this._productRepository.find();
@@ -32,12 +42,13 @@ export class ProductService {
         }
     }
 
-    async findProduct(productId: number) {
-        try {
-            const product = await this._productRepository.findOne({ where: { id: productId } });
-            return product;
-        } catch (error) {
-            throw new InternalServerErrorException("Find product error", "FIND_PRODUCT_ERROR");
-        }
+    async findProductById(productId: number) {
+        const product = await this._productRepository.findOne({ where: { id: productId } });
+        return product;
+    }
+
+    async findProductByApiKey(apiKey: string) {
+        const product = await this._productRepository.findOne({ where: { apiKey } });
+        return product;
     }
 }
