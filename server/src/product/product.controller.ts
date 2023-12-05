@@ -34,6 +34,6 @@ export class ProductController {
         summary: "해당 제품 ID의 제품 정보 반환",
     })
     async findProduct(@Param("id") id: string) {
-        return this._productService.findProduct(+id);
+        return this._productService.findProductById(+id);
     }
 }

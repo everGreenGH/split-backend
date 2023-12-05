@@ -6,21 +6,27 @@ import { CreateWalletRes } from "./wallet.dtos";
 
 @Injectable()
 export class WalletService {
-    constructor(@InjectRepository(Wallet) private readonly walletRepository: Repository<Wallet>) {}
+    constructor(@InjectRepository(Wallet) private readonly _walletRepository: Repository<Wallet>) {}
 
     public async findWalletByAddress(address_: string): Promise<Wallet> {
-        return await this.walletRepository.findOne({ where: { address: address_.toLowerCase() } });
+        return await this._walletRepository.findOne({ where: { address: address_.toLowerCase() } });
     }
 
     public async findOrCreateWallet(address_: string): Promise<CreateWalletRes> {
-        const wallet = await this.walletRepository.findOne({ where: { address: address_.toLowerCase() } });
+        const wallet = await this.findWalletByAddress(address_);
 
         if (!wallet) {
-            const wallet = await this.walletRepository.save({
+            const wallet = await this._walletRepository.save({
                 address: address_.toLowerCase(),
             });
             return { isCreated: true, wallet };
         }
         return { isCreated: false, wallet };
+    }
+
+    public async updateWallet(address: string, updateData: Partial<Wallet>): Promise<Wallet> {
+        const wallet = await this.findWalletByAddress(address);
+        const updatedWallet = await this._walletRepository.save({ ...wallet, ...updateData });
+        return updatedWallet;
     }
 }

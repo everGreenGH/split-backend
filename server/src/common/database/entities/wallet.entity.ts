@@ -8,6 +8,9 @@ export class Wallet extends CoreEntity {
     @Column({ unique: true })
     address: string;
 
+    @Column()
+    nonce: string;
+
     @Column({ type: "varchar", length: 255, nullable: true })
     encryptedRefreshToken?: string;
 
