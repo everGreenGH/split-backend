@@ -1,34 +1,25 @@
-import useConnectWallet from "@/hooks/useConnectWallet";
-import useSiweSign from "@/hooks/useSiweSign";
+import useConnectWallet, { LoginState } from "@/hooks/useConnectWallet";
 import { useEffect, useState } from "react";
 import s from "./index.module.scss";
 
 export default function Home() {
-  const { isLoading: isWalletConnectLoading, connectWalletHandler } =
-    useConnectWallet();
-  const {
-    isLoading: isSiweSignLoading,
-    address,
-    signInHandler,
-  } = useSiweSign();
+  const { loginState, walletState, connectWalletHandler } = useConnectWallet();
 
   return (
     <>
-      {address ? (
+      {loginState === LoginState.DONE ? (
         <div className={s.container}>
-          <div className={s.label}>Connected as {address}</div>
-          <button disabled={isSiweSignLoading} onClick={signInHandler}>
-            Sign In
-          </button>
+          <div className={s.text}>지갑 연결에 성공했어요.</div>
+          <div className={s.text}>지갑 주소: {walletState}</div>
         </div>
       ) : (
         <div className={s.container}>
-          <div className={s.label}>Click button and connect wallet</div>
+          <div className={s.text}>아래 버튼을 클릭하여 지갑을 연결하세요.</div>
           <button
-            disabled={isWalletConnectLoading}
+            disabled={loginState === LoginState.PROGRESS}
             onClick={connectWalletHandler}
           >
-            Connect Wallet
+            지갑 연결하기
           </button>
         </div>
       )}

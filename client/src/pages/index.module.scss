@@ -11,8 +11,8 @@
     height: 60px;
     border: none;
     border-radius: 10px;
-    background: #e19f79;
-    color: #000;
+    background: #ee3a43;
+    color: #ffffff;
     text-align: center;
     font-family: Pretendard;
     font-size: 16px;
@@ -22,7 +22,7 @@
     transition: all 0.3s ease 0s;
 
     &:hover {
-      background: #c9632a;
+      background: #be2e36;
     }
 
     &:disabled {
@@ -32,7 +32,7 @@
   }
 }
 
-.label {
+.text {
   height: 20px;
   color: #000;
   font-family: Pretendard;
