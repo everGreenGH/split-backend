@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
+import { Entity, ManyToOne } from "typeorm";
 import { Wallet } from "./wallet.entity";
-import { Transaction } from "./transaction.entity";
 import { CoreEntity } from "./core.entity";
 import { Product } from "./product.entity";
 
