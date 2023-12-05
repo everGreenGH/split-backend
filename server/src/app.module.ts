@@ -12,12 +12,14 @@ import { Wallet } from "./common/database/entities/wallet.entity";
 import { WalletModule } from "./wallet/wallet.module";
 import { ReferralModule } from "./referral/referral.module";
 import { ProductModule } from "./product/product.module";
+import { AuthModule } from "./auth/auth.module";
+import jwtConfig from "./common/config/jwt.config";
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            load: [postgresConfig],
+            load: [postgresConfig, jwtConfig],
             envFilePath: path.join("env", `.${process.env.NODE_ENV}.env`),
             ignoreEnvFile: !(process.env.NODE_ENV === "local"),
         }),
@@ -32,6 +34,7 @@ import { ProductModule } from "./product/product.module";
         WalletModule,
         ReferralModule,
         ProductModule,
+        AuthModule,
     ],
     controllers: [],
     providers: [],

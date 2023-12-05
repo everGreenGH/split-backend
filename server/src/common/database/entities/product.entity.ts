@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
 import { Transaction } from "./transaction.entity";
 import { SupportedNetworks } from "src/common/constants/supported-networks";
 import { CoreEntity } from "./core.entity";
+import { Wallet } from "./wallet.entity";
 
 @Entity({ name: "Product" })
 export class Product extends CoreEntity {
@@ -23,7 +24,7 @@ export class Product extends CoreEntity {
     @Column({ nullable: true })
     poolAddress: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, unique: true })
     apiKey: string;
 
     @Column({ default: false })
@@ -32,5 +33,7 @@ export class Product extends CoreEntity {
     @OneToMany(() => Transaction, (transaction) => transaction.product, { cascade: true, eager: true })
     transactions: Transaction[];
 
+    @ManyToOne(() => Wallet, (wallet) => wallet.products, { eager: true })
+    wallet: Wallet;
     // TODO: 와이어프레임에 따라 추가
 }

@@ -14,7 +14,7 @@ export class ReferralService {
 
     public async addReferral(req: AddReferralReq): Promise<AddReferralRes> {
         try {
-            const product = await this._productService.findProduct(req.productId);
+            const product = await this._productService.findProductById(req.productId);
             if (!product) {
                 throw new BadRequestException("Invalid product id", "ADD_REFERRAL_ERROR");
             }
