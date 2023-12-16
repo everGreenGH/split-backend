@@ -1,31 +1,29 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { WalletService } from "src/wallet/wallet.service";
 import { AddReferralReq, AddReferralRes } from "./referral.dtos";
-import { ProductService } from "src/product/product.service";
 import { ReferralRepository } from "./referral.repository";
+import { Product } from "src/common/database/entities/product.entity";
 
 @Injectable()
 export class ReferralService {
     constructor(
         private readonly _referralRepository: ReferralRepository,
         private readonly _walletService: WalletService,
-        private readonly _productService: ProductService,
     ) {}
 
-    public async addReferral(req: AddReferralReq): Promise<AddReferralRes> {
+    // TODO: Response 어떻게 할 것인지 프론트랑 맞추기
+    public async addReferral(product: Product, req: AddReferralReq): Promise<AddReferralRes> {
         try {
-            const product = await this._productService.findProductById(req.productId);
-            if (!product) {
-                throw new BadRequestException("Invalid product id", "ADD_REFERRAL_ERROR");
+            const referralProviderIsUser = req.referralProviderAddress.toLowerCase() === req.userAddress.toLowerCase();
+            if (referralProviderIsUser) {
+                return { updated: false };
             }
 
             const existingReferral = await this._referralRepository.getExistingReferral(
                 req.userAddress.toLowerCase(),
                 req.referralProviderAddress.toLowerCase(),
             );
-
             if (existingReferral) {
-                // TODO: Response 어떻게 할 것인지 프론트랑 맞추기
                 return { updated: false };
             }
 

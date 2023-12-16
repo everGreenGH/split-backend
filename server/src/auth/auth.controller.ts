@@ -1,16 +1,28 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res, UnauthorizedException } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Post,
+    Query,
+    Res,
+    UnauthorizedException,
+    UseGuards,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Response } from "express";
 import { ConfigService } from "@nestjs/config";
 import { SignInReq, SignInRes, GetNonceRes, GetNonceReq, RefreshReq } from "./auth.dtos";
 import { SkipThrottle } from "@nestjs/throttler";
-import { ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+import { ApiBasicAuth, ApiOkResponse, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiKeyGuard } from "src/common/guards/api-key.guard";
 
+@SkipThrottle()
 @Controller("auth")
 export class AuthController {
     constructor(private readonly _authService: AuthService, private readonly _configService: ConfigService) {}
 
-    @SkipThrottle()
     @Get("nonce")
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
@@ -20,7 +32,6 @@ export class AuthController {
         return this._authService.getNonce(query);
     }
 
-    @SkipThrottle()
     @Post("sign")
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
@@ -36,7 +47,6 @@ export class AuthController {
         return res.json(walletRes);
     }
 
-    @SkipThrottle()
     @Get("refresh")
     @ApiOperation({
         summary: "AccessToken 만료 시 재발급",
@@ -50,5 +60,16 @@ export class AuthController {
         } catch (error) {
             throw new UnauthorizedException();
         }
+    }
+
+    @UseGuards(ApiKeyGuard)
+    @Get("sdk")
+    @ApiBasicAuth("api-key")
+    @ApiOperation({
+        summary: "API Key 유효한지 확인, 유효할 시 true 반환",
+    })
+    @HttpCode(HttpStatus.OK)
+    isValidApiKey() {
+        return true;
     }
 }
