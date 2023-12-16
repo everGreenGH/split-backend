@@ -5,11 +5,11 @@ import { ApiOkResponse, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { Wallet } from "src/common/database/entities/wallet.entity";
 
+@SkipThrottle()
 @Controller("wallet")
 export class WalletController {
     constructor(private readonly walletService: WalletService) {}
 
-    @SkipThrottle()
     @Post()
     @HttpCode(HttpStatus.OK)
     @ApiResponse({ type: CreateWalletRes })

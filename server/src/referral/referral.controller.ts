@@ -1,9 +1,10 @@
-import { Controller, Post, Query, UseGuards } from "@nestjs/common";
+import { Controller, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { ReferralService } from "./referral.service";
 import { AddReferralReq, AddReferralRes } from "./referral.dtos";
 import { ApiBasicAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { ApiKeyGuard } from "src/common/guards/api-key.guard";
+import { Request } from "express";
 
 @Controller("referral")
 export class ReferralController {
@@ -18,7 +19,7 @@ export class ReferralController {
     @ApiOperation({
         summary: "광고주 페이지에서 사용자가 지갑 연결 시 SDK가 호출하는 엔드포인트",
     })
-    async addReferral(@Query() query: AddReferralReq): Promise<AddReferralRes> {
-        return this._referralService.addReferral(query);
+    async addReferral(@Req() req: Request, @Query() query: AddReferralReq): Promise<AddReferralRes> {
+        return this._referralService.addReferral(req.product, query);
     }
 }

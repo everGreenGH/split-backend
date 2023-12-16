@@ -11,6 +11,7 @@ export class AuthTokens {
 }
 
 export class GetNonceReq {
+    @IsEthereumAddress()
     address: string;
 }
 
