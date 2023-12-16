@@ -8,23 +8,17 @@ contract IncentivePool is IncentivePoolStorage {
 
         factory = msg.sender;
         masterAdmin = req.deployer;
-        incentiveToken = info.incentiveToken;
-        incentiveAmountPerTransaction = info.incentiveAmountPerTransaction;
-        affiliateAmountPerTransaction = info.affiliateAmountPerTransaction;
-        userAmountPerTransaction = info.userAmountPerTransaction;
-        leftTransactionNum = info.leftTransactionNum;
-        maxTransactionNumPerWallet = info.maxTransactionNumPerWallet;
-        endTimeStamp = info.endTimeStamp;
+        incentiveInfo = info;
     }
 
     function addLeftTransactionNum(uint256 addedTransactionNum) external {
         require(msg.sender == factory || msg.sender == masterAdmin, "ACCESS_DENIED");
 
-        uint256 addedIncentiveAmount = addedTransactionNum * incentiveAmountPerTransaction;
-        incentiveToken.transferFrom(msg.sender, address(this), addedIncentiveAmount);
+        uint256 addedIncentiveAmount = addedTransactionNum * incentiveInfo.incentiveAmountPerTransaction;
+        incentiveInfo.incentiveToken.transferFrom(msg.sender, address(this), addedIncentiveAmount);
 
-        leftTransactionNum += addedTransactionNum;
+        incentiveInfo.leftTransactionNum += addedTransactionNum;
 
-        emit AddLeftTransactionNum(addedTransactionNum, leftTransactionNum, addedIncentiveAmount);
+        emit AddLeftTransactionNum(addedTransactionNum, incentiveInfo.leftTransactionNum, addedIncentiveAmount);
     }
 }

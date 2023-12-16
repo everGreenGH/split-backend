@@ -6,22 +6,11 @@ contract IncentivePoolStorage is IncentivePoolInterface {
     /// @notice IncentivePoolFactory 컨트랙트 주소
     address public factory;
 
-    /// @notice 풀 관리자 주소, 풀 생성자 주소로 초기 설정
+    /// @notice 풀 관리자 주소
     address public masterAdmin;
 
-    IERC20 public incentiveToken;
-
-    uint256 public incentiveAmountPerTransaction;
-
-    uint256 public affiliateAmountPerTransaction;
-
-    uint256 public userAmountPerTransaction;
-
-    uint256 public leftTransactionNum;
-
-    uint256 public maxTransactionNumPerWallet;
-
-    uint256 public endTimeStamp;
+    /// @notice 인센티브 관련 데이터
+    IncentiveInfo public incentiveInfo;
 
     mapping(address => ConnectedUserInfo[]) public affiliateToLeftTransactionNum;
 
