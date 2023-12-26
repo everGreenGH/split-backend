@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>React App</title>
+
+  <!-- Include splitsdk -->
+  <script type="text/javascript" src="splitsdk/splitsdk.js"></script>
+
+  <!-- Include React and ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <!-- <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script> -->
+
+  <!-- Include SplitSnackBar component script
+  <script type="text/javascript" src="../src/components/SplitSnackBar.tsx"></script> -->
+
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    var split = new Split.sdk.constructor();
+    split.init("c92f5b322d6d76d4981df4ce164e2151");
+  </script>
+
+</body>
+
+</html>
