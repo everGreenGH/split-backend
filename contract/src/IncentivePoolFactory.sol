@@ -3,6 +3,7 @@ pragma solidity ^0.8.11;
 import "./common/upgradeable/Initializable.sol";
 import "./interface/IncentivePoolFactoryInterface.sol";
 import "./IncentivePool.sol";
+import "hardhat/console.sol";
 
 contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
     ///  @notice List of product incentive pools
@@ -36,6 +37,20 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
     function initialize(address masterAdmin_, uint256 poolCreationFee_) public initializer {
         masterAdmin = masterAdmin_;
         poolCreationFee = poolCreationFee_;
+
+        _notEntered = true;
+    }
+
+    function getIncentivePoolAddresses() external view returns (address[] memory) {
+        uint len = incentivePools.length;
+        address[] memory result = new address[](len);
+
+        for (uint i = 0; i < len; i += 1) {
+            address incentivePool = address(incentivePools[i]);
+            result[i] = incentivePool;
+        }
+
+        return result;
     }
 
     function createIncentivePool(CreateIncentivePoolReq memory req) external payable nonReentrant {
@@ -44,7 +59,7 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         require(msg.value >= poolCreationFee, "NOT_ENOUGHT_VALUE");
         require(address(info.incentiveToken) != address(0), "INVALID_TOKEN_ADDRESS");
 
-        uint256 initialAmount = ((info.leftTransactionNum * info.incentiveAmountPerTransaction) / 1e18);
+        uint256 initialAmount = info.leftTransactionNum * info.incentiveAmountPerTransaction;
         info.incentiveToken.transferFrom(msg.sender, address(this), initialAmount);
 
         DeployIncentivePoolReq memory params;

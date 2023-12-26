@@ -1,6 +1,7 @@
 pragma solidity ^0.8.11;
 
 import "./IncentivePoolStorage.sol";
+import "hardhat/console.sol";
 
 contract IncentivePool is IncentivePoolStorage {
     modifier nonReentrant() {
@@ -16,6 +17,11 @@ contract IncentivePool is IncentivePoolStorage {
         factory = msg.sender;
         poolAdmin = req.deployer;
         incentiveInfo = info;
+
+        isClaimPaused = false;
+        isUpdatePaused = false;
+
+        _notEntered = true;
     }
 
     function addLeftTransactionNum(uint256 addedTransactionNum) external {
@@ -24,7 +30,10 @@ contract IncentivePool is IncentivePoolStorage {
         uint256 addedIncentiveAmount = addedTransactionNum * incentiveInfo.incentiveAmountPerTransaction;
         incentiveInfo.incentiveToken.transferFrom(msg.sender, address(this), addedIncentiveAmount);
 
-        incentiveInfo.leftTransactionNum += addedTransactionNum;
+        // msg.sender가 factory인 경우, 생성자에서 leftTransactionNum을 설정
+        if (msg.sender != factory) {
+            incentiveInfo.leftTransactionNum += addedTransactionNum;
+        }
 
         emit AddLeftTransactionNum(addedTransactionNum, incentiveInfo.leftTransactionNum, addedIncentiveAmount);
     }
