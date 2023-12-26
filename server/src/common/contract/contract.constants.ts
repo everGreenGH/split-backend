@@ -1,0 +1,1 @@
+export const VICTION_GAS_PRICE = 1000000000;
