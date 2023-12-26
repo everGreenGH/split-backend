@@ -217,8 +217,16 @@ describe("인센티브 풀 관련 테스트", () => {
                 req.incentiveInfo.affiliateAmountPerTransaction.mul(3),
             );
 
+            expect(await firstIncentivePool.affiliateToClaimedTransactionNum(user[4].address)).to.equal(
+                BigNumber.from(3),
+            );
+
             await firstIncentivePool.connect(user[2]).claimAffiliateIncentive();
             expect(await testUSDC.balanceOf(user[2].address)).to.equal(req.incentiveInfo.affiliateAmountPerTransaction);
+
+            expect(await firstIncentivePool.affiliateToClaimedTransactionNum(user[2].address)).to.equal(
+                BigNumber.from(1),
+            );
 
             const leftAmount = initialAmount.sub(req.incentiveInfo.affiliateAmountPerTransaction.mul(4));
             expect(await testUSDC.balanceOf(firstIncentivePool.address)).to.equal(leftAmount);
@@ -229,6 +237,23 @@ describe("인센티브 풀 관련 테스트", () => {
             expect(await testUSDC.balanceOf(user[6].address)).to.equal(
                 req.incentiveInfo.userAmountPerTransaction.mul(2),
             );
+
+            expect(await firstIncentivePool.userToClaimedTransactionNum(user[6].address)).to.equal(BigNumber.from(2));
+        });
+
+        it("getUserDashboardData 데이터가 정상적으로 반환되는가?", async () => {
+            await secondIncentivePool.connect(user[5]).claimAffiliateIncentive();
+            // await firstIncentivePool.connect(user[5]).claimUserIncentive();
+
+            const data = await incentivePoolFactory.getUserDashboardData(user[5].address);
+
+            expect(data[0]).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
+            expect(data[1]).to.equal(
+                req.incentiveInfo.affiliateAmountPerTransaction.mul(3).add(req.incentiveInfo.userAmountPerTransaction),
+            );
+
+            expect(data[2]).to.equal(BigNumber.from(2));
+            expect(data[3]).to.equal(BigNumber.from(4));
         });
     });
 });
