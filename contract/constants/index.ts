@@ -7,7 +7,8 @@ import { TestInterface } from "./interface";
 // should add networks here to use
 export enum Network {
     hardhat = "hardhat",
-    testnet = "testnet",
+    // eslint-disable-next-line camelcase
+    viction_testnet = "viction_testnet",
     // ADD Networks
 }
 

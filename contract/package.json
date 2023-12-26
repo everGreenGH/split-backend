@@ -27,7 +27,9 @@
     "node:hardhat:deploy": "export $(cat env/.hardhat.env | xargs) && npx hardhat node --network hardhat --export ./deployments/localhost.json",
     "deploy:hardhat": "export $(cat env/.hardhat.env | xargs) && npx hardhat deploy --network localhost --export ./deployments/localhost.json",
     "start:hardhat": "export $(cat env/.hardhat.env | xargs) && npx ts-node",
-    "run:hardhat": "export $(cat env/.hardhat.env | xargs) && npx hardhat run --network localhost"
+    "run:hardhat": "export $(cat env/.hardhat.env | xargs) && npx hardhat run --network localhost",
+    "deploy:testnet": "export $(cat env/.viction_testnet.env | xargs) && npx hardhat deploy --network viction_testnet --export ./deployments/viction_testnet.json",
+    "run:testnet": "export $(cat env/.viction_testnet.env | xargs) && npx hardhat run --network viction_testnet"
   },
   "dependencies": {
     "@ethereum-waffle/mock-contract": "3.4.4",
