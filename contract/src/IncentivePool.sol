@@ -43,6 +43,7 @@ contract IncentivePool is IncentivePoolStorage {
         require(msg.sender == factory, "ACCESS_DENIED");
 
         for (uint256 i = 0; i < referrals.length; i++) {
+            // 추천인 정보 업데이트
             ConnectedUserData storage userData = affiliateToLeftTransactionNum[referrals[i].affiliate];
 
             bool isRegisteredUser = userData.userToIsRegisteredUser[referrals[i].user];
@@ -52,6 +53,9 @@ contract IncentivePool is IncentivePoolStorage {
             }
 
             userData.leftTransactionNum++;
+
+            // 사용자 정보 업데이트
+            userToLeftTransactionNum[referrals[i].user]++;
         }
     }
 
@@ -64,7 +68,7 @@ contract IncentivePool is IncentivePoolStorage {
 
         require(claimTransactionNum > 0, "NO_TRANSACTION");
 
-        uint256 claimValue = claimTransactionNum * incentiveInfo.incentiveAmountPerTransaction;
+        uint256 claimValue = claimTransactionNum * incentiveInfo.affiliateAmountPerTransaction;
         incentiveInfo.incentiveToken.transfer(msg.sender, claimValue);
 
         emit ClaimIncentive(msg.sender, ClaimType.AFFILIATE, claimTransactionNum, claimValue);
@@ -78,7 +82,7 @@ contract IncentivePool is IncentivePoolStorage {
 
         userToLeftTransactionNum[msg.sender] = 0;
 
-        uint256 claimValue = claimTransactionNum * incentiveInfo.incentiveAmountPerTransaction;
+        uint256 claimValue = claimTransactionNum * incentiveInfo.userAmountPerTransaction;
         incentiveInfo.incentiveToken.transfer(msg.sender, claimValue);
 
         emit ClaimIncentive(msg.sender, ClaimType.USER, claimTransactionNum, claimValue);

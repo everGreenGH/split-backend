@@ -4,6 +4,7 @@ import { IncentivePool, IncentivePoolFactory, TestToken } from "@typechains";
 import { expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers, network } from "hardhat";
+import { first } from "lodash";
 
 describe("인센티브 풀 관련 테스트", () => {
     /* Signer */
@@ -132,7 +133,7 @@ describe("인센티브 풀 관련 테스트", () => {
         });
     });
 
-    describe("풀 업데이트 테스트", () => {
+    describe("풀 업데이트 및 클레임 테스트", () => {
         let updateReq: {
             info: {
                 incentivePoolAddress: string;
@@ -140,7 +141,7 @@ describe("인센티브 풀 관련 테스트", () => {
             }[];
         };
 
-        beforeEach(() => {
+        beforeEach(async () => {
             updateReq = {
                 info: [
                     {
@@ -162,11 +163,11 @@ describe("인센티브 풀 관련 테스트", () => {
                     },
                 ],
             };
+
+            await incentivePoolFactory.connect(admin).updateIncentivePools(updateReq);
         });
 
-        it("풀 업데이트가 정상적으로 이루어지는가?", async () => {
-            await incentivePoolFactory.connect(admin).updateIncentivePools(updateReq);
-
+        it("추천인 데이터 업데이트가 정상적으로 이루어지는가?", async () => {
             const user2TransactionNum = await firstIncentivePool.affiliateToLeftTransactionNum(user[2].address);
             expect(user2TransactionNum).to.equal(1);
 
@@ -175,6 +176,43 @@ describe("인센티브 풀 관련 테스트", () => {
 
             const user5TransactionNum = await secondIncentivePool.affiliateToLeftTransactionNum(user[5].address);
             expect(user5TransactionNum).to.equal(3);
+        });
+
+        it("사용자 데이터 업데이트가 정상적으로 이루어지는가?", async () => {
+            const user2TransactionNum = await firstIncentivePool.affiliateToLeftTransactionNum(user[2].address);
+            expect(user2TransactionNum).to.equal(1);
+
+            const user4TransactionNum = await firstIncentivePool.affiliateToLeftTransactionNum(user[4].address);
+            expect(user4TransactionNum).to.equal(3);
+
+            const user5TransactionNum = await secondIncentivePool.affiliateToLeftTransactionNum(user[5].address);
+            expect(user5TransactionNum).to.equal(3);
+        });
+
+        it("관리자가 아닌 유저가 업데이트를 시도할 시 revert되는가?", async () => {
+            await expect(incentivePoolFactory.connect(user[0]).updateIncentivePools(updateReq)).to.revertedWith(
+                "ACCESS_DENIED",
+            );
+        });
+
+        it("추천인 클레임이 정상적으로 이루어지는가?", async () => {
+            await firstIncentivePool.connect(user[4]).claimAffiliateIncentive();
+            expect(await testUSDC.balanceOf(user[4].address)).to.equal(
+                req.incentiveInfo.affiliateAmountPerTransaction.mul(3),
+            );
+
+            await firstIncentivePool.connect(user[2]).claimAffiliateIncentive();
+            expect(await testUSDC.balanceOf(user[2].address)).to.equal(req.incentiveInfo.affiliateAmountPerTransaction);
+
+            const leftAmount = initialAmount.sub(req.incentiveInfo.affiliateAmountPerTransaction.mul(4));
+            expect(await testUSDC.balanceOf(firstIncentivePool.address)).to.equal(leftAmount);
+        });
+
+        it("사용자 클레임이 정상적으로 이루어지는가?", async () => {
+            await firstIncentivePool.connect(user[6]).claimUserIncentive();
+            expect(await testUSDC.balanceOf(user[6].address)).to.equal(
+                req.incentiveInfo.userAmountPerTransaction.mul(2),
+            );
         });
     });
 });
