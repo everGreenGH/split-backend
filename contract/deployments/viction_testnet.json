@@ -3,7 +3,7 @@
   "chainId": "89",
   "contracts": {
     "IncentivePoolFactory": {
-      "address": "0x0163861429899077CBf456B7149C21e30925AD41",
+      "address": "0xBcB29580B993a3888106e779e2E48BAADf2A788a",
       "abi": [
         {
           "anonymous": false,
@@ -220,6 +220,38 @@
           "name": "createIncentivePool",
           "outputs": [],
           "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "deployers",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getDeployers",
+          "outputs": [
+            {
+              "internalType": "address[]",
+              "name": "",
+              "type": "address[]"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -385,7 +417,7 @@
       ]
     },
     "IncentivePoolFactory_Implementation": {
-      "address": "0xBf618F913AEA5b11D03cb58Ace68b36C6f9F9F62",
+      "address": "0xF438DC32dA814FB278cD49B0A5E3c1DF9D93521e",
       "abi": [
         {
           "inputs": [],
@@ -485,6 +517,38 @@
           "name": "createIncentivePool",
           "outputs": [],
           "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "deployers",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getDeployers",
+          "outputs": [
+            {
+              "internalType": "address[]",
+              "name": "",
+              "type": "address[]"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -629,7 +693,7 @@
       ]
     },
     "IncentivePoolFactory_Proxy": {
-      "address": "0x0163861429899077CBf456B7149C21e30925AD41",
+      "address": "0xBcB29580B993a3888106e779e2E48BAADf2A788a",
       "abi": [
         {
           "inputs": [
@@ -777,7 +841,7 @@
       ]
     },
     "USDC": {
-      "address": "0x72Df569b37d9CAE07A3e8eDCaC6B8946d28D31F0",
+      "address": "0xEFBF1A4Bb5Ea072b9815d23D12146cdA8e69eD8a",
       "abi": [
         {
           "inputs": [

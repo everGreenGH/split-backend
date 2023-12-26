@@ -18,6 +18,9 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
     ///  @notice Address of the master admin of split
     address public masterAdmin;
 
+    ///  @notice Addresses of the deployers
+    address[] public deployers;
+
     ///  @dev Guard variable for re-entrancy checks
     bool internal _notEntered;
 
@@ -52,6 +55,18 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         return result;
     }
 
+    function getDeployers() external view returns (address[] memory) {
+        uint len = deployers.length;
+        address[] memory result = new address[](len);
+
+        for (uint i = 0; i < len; i += 1) {
+            address deployer = address(deployers[i]);
+            result[i] = deployer;
+        }
+
+        return result;
+    }
+
     function createIncentivePool(CreateIncentivePoolReq memory req) external payable nonReentrant {
         IncentiveInfo memory info = req.incentiveInfo;
 
@@ -66,7 +81,9 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         params.incentiveInfo = info;
 
         IncentivePool incentivePool = new IncentivePool(params);
+
         incentivePools.push(incentivePool);
+        deployers.push(msg.sender);
         isValidPool[address(incentivePool)] = true;
 
         info.incentiveToken.approve(address(incentivePool), initialAmount);

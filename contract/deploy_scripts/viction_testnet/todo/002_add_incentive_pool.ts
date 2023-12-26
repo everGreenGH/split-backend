@@ -10,6 +10,10 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 const GAS_PRICE = 1000000000;
 
+function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments } = hre;
     const { deploy } = deployments;
@@ -45,22 +49,29 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     );
 
     await (await testUSDC.connect(admin).mintFor(admin.address, initialAmount, { gasPrice: GAS_PRICE })).wait();
+    await delay(3000);
+    console.log("=== (⌛️ 1/3 ⌛️) TestUSDC 민팅 완료 🚀");
+
     await (
         await testUSDC.connect(admin).approve(incentivePoolFactory.address, initialAmount, { gasPrice: GAS_PRICE })
     ).wait();
-    console.log("=== (⌛️ 1/2 ⌛️) TestUSDC 민팅 및 approve 완료 🚀");
+    await delay(3000);
+
+    console.log("=== (⌛️ 2/3 ⌛️) TestUSDC approve 완료 🚀");
 
     await (
         await incentivePoolFactory
             .connect(admin)
             .createIncentivePool(createIncentivePoolReq, { value: POOL_CREATION_FEE, gasPrice: GAS_PRICE })
     ).wait();
+    await delay(3000);
+
     const pools = await incentivePoolFactory.getIncentivePoolAddresses();
     console.log(pools);
     const incentivePool = await ethers.getContractAt("IncentivePool", pools[0]);
 
     console.log(
-        "=== (⌛️ 2/2 ⌛️) IncentivePool 배포 및 초기 설정 완료 🚀, IncentivePool 주소: ",
+        "=== (⌛️ 3/3 ⌛️) IncentivePool 배포 및 초기 설정 완료 🚀, IncentivePool 주소: ",
         incentivePool.address,
     );
 

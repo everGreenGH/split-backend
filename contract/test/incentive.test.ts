@@ -101,6 +101,8 @@ describe("인센티브 풀 관련 테스트", () => {
         it("신규 풀 초기 설정이 정상적으로 이루어지는가?", async () => {
             // factory 설정 확인
             expect(await incentivePoolFactory.isValidPool(firstIncentivePool.address)).to.equal(true);
+            expect((await incentivePoolFactory.getIncentivePoolAddresses())[0]).to.equal(firstIncentivePool.address);
+            expect((await incentivePoolFactory.getDeployers())[0]).to.equal(user[0].address);
 
             // 주소 설정 확인
             expect(await firstIncentivePool.factory()).to.equal(incentivePoolFactory.address);
