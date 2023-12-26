@@ -2,7 +2,7 @@ pragma solidity ^0.8.11;
 
 import "../common/token/IERC20.sol";
 
-interface DtoInterface {
+interface CommonDtos {
     struct IncentiveInfo {
         IERC20 incentiveToken;
         uint256 incentiveAmountPerTransaction;
@@ -20,5 +20,19 @@ interface DtoInterface {
     struct DeployIncentivePoolReq {
         address deployer;
         IncentiveInfo incentiveInfo;
+    }
+
+    struct Referral {
+        address affiliate;
+        address user;
+    }
+
+    struct PoolUpdateInfo {
+        address incentivePoolAddress;
+        Referral[] referrals;
+    }
+
+    struct UpdateIncentivePoolsReq {
+        PoolUpdateInfo[] info;
     }
 }

@@ -7,16 +7,19 @@ contract IncentivePoolStorage is IncentivePoolInterface {
     address public factory;
 
     /// @notice 풀 관리자 주소
-    address public masterAdmin;
+    address public poolAdmin;
 
     /// @notice 인센티브 관련 데이터
     IncentiveInfo public incentiveInfo;
 
-    mapping(address => ConnectedUserInfo[]) public affiliateToLeftTransactionNum;
+    mapping(address => ConnectedUserData) public affiliateToLeftTransactionNum;
 
     mapping(address => uint256) public userToLeftTransactionNum;
 
     bool public isClaimPaused;
 
     bool public isUpdatePaused;
+
+    ///  @dev Guard variable for re-entrancy checks
+    bool internal _notEntered;
 }
