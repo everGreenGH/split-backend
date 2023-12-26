@@ -11,6 +11,9 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
     ///  @notice Mapping of pool address to validness(is it deployed?)
     mapping(address => bool) public isValidPool;
 
+    ///  @notice Mapping of deployer address to pool address
+    mapping(address => address) public deployerToIncentivePool;
+
     ///  @notice Pool creation fee paid by contract
     ///  @dev Should be multiplied by unit of ether(1e18)
     uint256 public poolCreationFee;
@@ -72,6 +75,7 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
 
         require(msg.value >= poolCreationFee, "NOT_ENOUGHT_VALUE");
         require(address(info.incentiveToken) != address(0), "INVALID_TOKEN_ADDRESS");
+        require(deployerToIncentivePool[msg.sender] == address(0), "PRODUCT_OWNED");
 
         uint256 initialAmount = info.leftTransactionNum * info.incentiveAmountPerTransaction;
         info.incentiveToken.transferFrom(msg.sender, address(this), initialAmount);
@@ -85,6 +89,7 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         incentivePools.push(incentivePool);
         deployers.push(msg.sender);
         isValidPool[address(incentivePool)] = true;
+        deployerToIncentivePool[msg.sender] = address(incentivePool);
 
         info.incentiveToken.approve(address(incentivePool), initialAmount);
         incentivePool.addLeftTransactionNum(info.leftTransactionNum);

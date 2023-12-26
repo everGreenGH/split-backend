@@ -23,6 +23,30 @@ contract IncentivePool is IncentivePoolStorage {
         _notEntered = true;
     }
 
+    function getAffiliates() external view returns (address[] memory) {
+        uint len = affiliates.length;
+        address[] memory result = new address[](len);
+
+        for (uint i = 0; i < len; i += 1) {
+            address deployer = address(affiliates[i]);
+            result[i] = deployer;
+        }
+
+        return result;
+    }
+
+    function getUsers() external view returns (address[] memory) {
+        uint len = users.length;
+        address[] memory result = new address[](len);
+
+        for (uint i = 0; i < len; i += 1) {
+            address deployer = address(users[i]);
+            result[i] = deployer;
+        }
+
+        return result;
+    }
+
     function addLeftTransactionNum(uint256 addedTransactionNum) external {
         require(msg.sender == factory || msg.sender == poolAdmin, "ACCESS_DENIED");
 
@@ -42,19 +66,32 @@ contract IncentivePool is IncentivePoolStorage {
         require(msg.sender == factory, "ACCESS_DENIED");
 
         for (uint256 i = 0; i < referrals.length; i++) {
-            // 추천인 정보 업데이트
-            ConnectedUserData storage userData = affiliateToLeftTransactionNum[referrals[i].affiliate];
+            address affiliate = referrals[i].affiliate;
+            address user = referrals[i].user;
 
-            bool isRegisteredUser = userData.userToIsRegisteredUser[referrals[i].user];
+            // 추천인 정보 업데이트
+            ConnectedUserData storage userData = affiliateToLeftTransactionNum[affiliate];
+
+            bool isRegisteredUser = userData.userToIsRegisteredUser[user];
             if (!isRegisteredUser) {
-                userData.userToIsRegisteredUser[referrals[i].user] = true;
-                userData.users.push(referrals[i].user);
+                userData.userToIsRegisteredUser[user] = true;
+                userData.users.push(user);
             }
 
             userData.leftTransactionNum++;
 
             // 사용자 정보 업데이트
-            userToLeftTransactionNum[referrals[i].user]++;
+            userToLeftTransactionNum[user]++;
+
+            // 전체 풀 정보 업데이트
+            if (!isAffiliateExist[affiliate]) {
+                isAffiliateExist[affiliate] = true;
+                affiliates.push(affiliate);
+            }
+            if (!isUserExist[user]) {
+                isUserExist[user] = true;
+                users.push(user);
+            }
         }
     }
 

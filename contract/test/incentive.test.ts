@@ -101,6 +101,9 @@ describe("인센티브 풀 관련 테스트", () => {
         it("신규 풀 초기 설정이 정상적으로 이루어지는가?", async () => {
             // factory 설정 확인
             expect(await incentivePoolFactory.isValidPool(firstIncentivePool.address)).to.equal(true);
+            expect(await incentivePoolFactory.deployerToIncentivePool(user[0].address)).to.equal(
+                firstIncentivePool.address,
+            );
             expect((await incentivePoolFactory.getIncentivePoolAddresses())[0]).to.equal(firstIncentivePool.address);
             expect((await incentivePoolFactory.getDeployers())[0]).to.equal(user[0].address);
 
@@ -189,6 +192,17 @@ describe("인센티브 풀 관련 테스트", () => {
 
             const user5TransactionNum = await secondIncentivePool.affiliateToLeftTransactionNum(user[5].address);
             expect(user5TransactionNum).to.equal(3);
+        });
+
+        it("풀 전체 데이터 업데이트가 정상적으로 이루어지는가?", async () => {
+            const affiliates = await firstIncentivePool.getAffiliates();
+            expect(affiliates[0]).to.equal(user[2].address);
+            expect(affiliates[1]).to.equal(user[4].address);
+
+            const users = await firstIncentivePool.getUsers();
+            expect(users[0]).to.equal(user[3].address);
+            expect(users[1]).to.equal(user[5].address);
+            expect(users[2]).to.equal(user[6].address);
         });
 
         it("관리자가 아닌 유저가 업데이트를 시도할 시 revert되는가?", async () => {

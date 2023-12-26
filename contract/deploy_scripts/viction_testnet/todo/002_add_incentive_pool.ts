@@ -48,26 +48,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         createIncentivePoolReq.incentiveInfo.leftTransactionNum,
     );
 
+    await delay(4000);
     await (await testUSDC.connect(admin).mintFor(admin.address, initialAmount, { gasPrice: GAS_PRICE })).wait();
-    await delay(3000);
     console.log("=== (⌛️ 1/3 ⌛️) TestUSDC 민팅 완료 🚀");
 
+    await delay(4000);
     await (
         await testUSDC.connect(admin).approve(incentivePoolFactory.address, initialAmount, { gasPrice: GAS_PRICE })
     ).wait();
-    await delay(3000);
-
     console.log("=== (⌛️ 2/3 ⌛️) TestUSDC approve 완료 🚀");
 
+    await delay(4000);
     await (
         await incentivePoolFactory
             .connect(admin)
             .createIncentivePool(createIncentivePoolReq, { value: POOL_CREATION_FEE, gasPrice: GAS_PRICE })
     ).wait();
-    await delay(3000);
 
     const pools = await incentivePoolFactory.getIncentivePoolAddresses();
-    console.log(pools);
     const incentivePool = await ethers.getContractAt("IncentivePool", pools[0]);
 
     console.log(
