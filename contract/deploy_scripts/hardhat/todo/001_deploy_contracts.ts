@@ -28,14 +28,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         autoMine: true,
     });
 
-    // await deploy("Wemix", {
-    //     from: deployer.address,
-    //     contract: "TestToken",
-    //     args: ["Wemix", "WEMIX", hardhatUnderlyingTokenInfo.Wemix.tokenDecimal],
-    //     log: true,
-    //     autoMine: true,
-    // });
+    await deploy("USDC", {
+        from: admin.address,
+        contract: "TestToken",
+        args: ["USDC coin", "USDC", 18],
+        log: true,
+        autoMine: true,
+    });
 };
 
 export default func;
-func.tags = ["YYMMDD_001_deploy_contracts"];
+func.tags = ["001_deploy_contracts"];
