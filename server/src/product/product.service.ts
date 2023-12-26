@@ -3,7 +3,6 @@ import { CheckPoolDeployedReq, CreateProductReq } from "./product.dtos";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "src/common/database/entities/product.entity";
 import { Repository } from "typeorm";
-import { Transaction } from "src/common/database/entities/transaction.entity";
 import { WalletService } from "src/wallet/wallet.service";
 import * as crypto from "crypto";
 import { ContractFactory } from "src/common/contract/contract.factory";
@@ -44,15 +43,17 @@ export class ProductService {
             const incentivePoolFactoryContract = this._contractFactory.incentivePoolFactory();
 
             const deployers = await incentivePoolFactoryContract.getDeployers();
+            const poolAddress = await incentivePoolFactoryContract.deployerToIncentivePool(product.wallet.address);
+
             const isDeployerExist = deployers.some((deployer) => deployer.toLowerCase() === product.wallet.address);
-            if (!isDeployerExist) {
-                throw new NotFoundException("Deployer not found in contract", "CHECK_POOL_DEPLOY_ERROR");
+            if (!isDeployerExist && poolAddress) {
+                throw new NotFoundException("Deployer or Pool not found in contract", "CHECK_POOL_DEPLOY_ERROR");
             }
 
             const apiKey = this._generateApiKey();
             const updatedProduct = await this._productRepository.save({
                 ...product,
-                poolAddress: "sample_ethereum_address",
+                poolAddress,
                 apiKey,
             });
 
