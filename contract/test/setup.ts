@@ -1,4 +1,4 @@
-import { IncentivePoolFactory } from "@typechains";
+import { IncentivePool, IncentivePoolFactory } from "@typechains";
 import { deployments, ethers } from "hardhat";
 
 export const setup = async () => {

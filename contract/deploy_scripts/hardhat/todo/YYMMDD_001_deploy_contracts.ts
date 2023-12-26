@@ -11,9 +11,30 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments } = hre;
     const { deploy } = deployments;
-    const [developer] = await ethers.getSigners();
+    const [admin] = await ethers.getSigners();
 
-    // 여기서부터 배포 스크립트 작성
+    await deploy("IncentivePoolFactory", {
+        from: admin.address,
+        contract: "IncentivePoolFactory",
+        proxy: {
+            execute: {
+                init: {
+                    methodName: "initialize",
+                    args: [admin.address, ethers.utils.parseEther("0.1")],
+                },
+            },
+        },
+        log: true,
+        autoMine: true,
+    });
+
+    // await deploy("Wemix", {
+    //     from: deployer.address,
+    //     contract: "TestToken",
+    //     args: ["Wemix", "WEMIX", hardhatUnderlyingTokenInfo.Wemix.tokenDecimal],
+    //     log: true,
+    //     autoMine: true,
+    // });
 };
 
 export default func;

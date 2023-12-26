@@ -34,4 +34,10 @@ describe("테스트 그룹 이름", () => {
     after(async () => {
         await network.provider.send("evm_revert", [initialSnapshotId]);
     });
+
+    describe("새로운 테스트", () => {
+        it("배포 되어있는지 테스트", async () => {
+            console.log(incentivePoolFactory.address);
+        });
+    });
 });
