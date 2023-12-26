@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Wallet } from "../components/Wallet";
 import { Navbar } from "../components/Navbar";
 import { styled } from "styled-components";

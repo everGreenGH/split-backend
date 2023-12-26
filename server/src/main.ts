@@ -22,7 +22,7 @@ async function bootstrap() {
     }
 
     // NOTE: 이후 배포시 production 구분
-    app.enableCors({ origin: "http://localhost:3000", credentials: true });
+    app.enableCors({ origin: ["http://localhost:3000", "http://localhost:3002"], credentials: true });
     // app.use(cookieParser());
 
     await app.listen(8000);
