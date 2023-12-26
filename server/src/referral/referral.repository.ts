@@ -7,14 +7,19 @@ import { Repository } from "typeorm";
 export class ReferralRepository {
     constructor(@InjectRepository(Referral) private readonly _referralRepository: Repository<Referral>) {}
 
-    async getExistingReferral(userAddress: string, referralProviderAddress: string): Promise<Referral> {
-        console.log(userAddress, referralProviderAddress);
+    async getExistingReferral(
+        userAddress: string,
+        referralProviderAddress: string,
+        productId: number,
+    ): Promise<Referral> {
         return await this._referralRepository
             .createQueryBuilder("referral")
             .leftJoinAndSelect("referral.referralProvider", "provider")
             .leftJoinAndSelect("referral.user", "user")
+            .leftJoinAndSelect("referral.product", "product")
             .where("provider.address = :referralProviderAddress", { referralProviderAddress })
             .andWhere("user.address = :userAddress", { userAddress })
+            .andWhere("product.id = :productId", { productId })
             .getOne();
     }
 
@@ -22,5 +27,19 @@ export class ReferralRepository {
         const referralEntity = this._referralRepository.create(referral);
         const newReferral = await this._referralRepository.save(referralEntity);
         return newReferral;
+    }
+
+    async getNotUpdatedReferrals(): Promise<Referral[]> {
+        return await this._referralRepository
+            .createQueryBuilder("referral")
+            .leftJoinAndSelect("referral.referralProvider", "provider")
+            .leftJoinAndSelect("referral.user", "user")
+            .leftJoinAndSelect("referral.product", "product")
+            .where("referral.isUpdated = false")
+            .getMany();
+    }
+
+    async saveReferrals(referrals: Partial<Referral>[]) {
+        return await this._referralRepository.save(referrals);
     }
 }
