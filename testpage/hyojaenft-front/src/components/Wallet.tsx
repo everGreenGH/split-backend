@@ -4,8 +4,6 @@ import { styled } from "styled-components";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { useAddressStore } from "../stores/store";
-import useReferralRequest from '../hooks/useReferralRequest';
-import Split from '../../public/splitsdk/splitsdk';
 import { SplitSnackBar } from "./SplitSnackBar";
 
 const Container = styled.div`
@@ -47,16 +45,10 @@ declare global {
   }
 }
 
-interface WalletProps {
-  account: string;
-  setAccount: (account: string) => void;
-}
-
-export const Wallet = ({ account, setAccount }: WalletProps) => {
+export const Wallet = () => {
   const { setAddress } = useAddressStore();
   const [affiliateAddress, setAffiliateAddress] = useState<string | null>(null);
-  const [showSnackBar, setShowSnackBar] = useState<boolean>(false); // Add state
-
+  const [showSnackBar, setShowSnackBar] = useState<boolean>(false);
 
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
@@ -64,8 +56,6 @@ export const Wallet = ({ account, setAccount }: WalletProps) => {
   });
 
   const { disconnect } = useDisconnect();
-  setAccount(address!);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,9 +80,14 @@ export const Wallet = ({ account, setAccount }: WalletProps) => {
 
     if (isConnected) {
       fetchData();
+      // useAccount(address!); 
     }
-  }, [isConnected,]);
+  }, [address, isConnected]);
 
+  const handleDisconnect = () => {
+    disconnect();
+    setShowSnackBar(false);
+  };
 
   return (
     <Container>
@@ -100,7 +95,7 @@ export const Wallet = ({ account, setAccount }: WalletProps) => {
         <>
           <div>
             Connected to {address}
-            <StyledButton onClick={() => disconnect()}>Disconnect</StyledButton>
+            <StyledButton onClick={handleDisconnect}>Disconnect</StyledButton>
           </div>
         </>
       ) : (
@@ -109,5 +104,4 @@ export const Wallet = ({ account, setAccount }: WalletProps) => {
       {showSnackBar && <SplitSnackBar />}
     </Container>
   );
-
 };

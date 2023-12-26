@@ -15,8 +15,7 @@ export const Home = () => {
     <>
       <Container>
         <Navbar></Navbar>
-        {/* <WalletName></WalletName> */}
-        <Wallet account={account} setAccount={setAccount}></Wallet>
+        <Wallet></Wallet>
       </Container>
       <MintAndTransfer account={account} setAccount={setAccount} />
     </>

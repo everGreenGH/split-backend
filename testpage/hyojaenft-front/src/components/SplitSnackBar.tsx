@@ -2,13 +2,13 @@ import styled from "styled-components";
 
 const StyledSnackbar = styled.div`
   align-items: center;
-  background-color: #979797d9;
+  background-color: #a5a5a5d9;
   border-radius: 20px;
   display: inline-flex;
   gap: 20px;
   padding: 10px 20px;
   position: fixed;
-  top: 30;
+  top: 20;
 
   & .label {
     align-items: center;
@@ -42,6 +42,10 @@ const StyledSnackbar = styled.div`
     line-height: normal;
     position: absolute;
     top: 0;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
   }
 
   & .button {
@@ -68,19 +72,25 @@ const StyledSnackbar = styled.div`
     position: relative;
     white-space: nowrap;
     width: fit-content;
+    color: white;
   }
 `;
 
 export const SplitSnackBar:React.FC = () => {
+
+    const handleButtonClick = () => {
+        window.open('http://localhost:3000/', '_blank');
+      };
+
   return (
     <StyledSnackbar>
       <div className="label">
-        <img className="icon" alt="Icon" src="icon.png" />
+        <img className="icon" alt="Icon" src= "/assets/img_gift.png" />
         <div className="text">
           <p className="text-wrapper">Reward registration for you and your referrer is complete.</p>
         </div>
       </div>
-      <button className="button">
+      <button className="button" onClick={handleButtonClick}>
         <div className="div">Check</div>
       </button>
     </StyledSnackbar>
