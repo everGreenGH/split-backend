@@ -3,6 +3,8 @@ pragma solidity ^0.8.11;
 import "./common/upgradeable/Initializable.sol";
 import "./interface/IncentivePoolFactoryInterface.sol";
 import "./IncentivePool.sol";
+import "./interface/IncentivePoolInterface.sol";
+import "./common/token/IERC20.sol";
 
 contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
     ///  @notice List of product incentive pools
@@ -70,15 +72,78 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         return result;
     }
 
+    struct GetUserDashboardLocalVars {
+        uint256 affilateLeftTransaction;
+        uint256 affilateClaimedTransaction;
+        uint256 userLeftTransaction;
+        uint256 userClaimedTransaction;
+        uint256 affiliateAmountPerTransaction;
+        uint256 userAmountPerTransaction;
+        uint256 claimed;
+        uint256 totalClaimed;
+        uint256 totalEarned;
+        uint256 productNum;
+        uint256 transactionNum;
+        uint256 totalTransactionNum;
+    }
+
+    function getUserDashboardData(address walletAddr) external view returns (uint256, uint256, uint256, uint256) {
+        GetUserDashboardLocalVars memory vars;
+
+        vars.totalClaimed = 0;
+        vars.totalEarned = 0;
+        vars.productNum = 0;
+        vars.totalTransactionNum = 0;
+
+        for (uint256 i = 0; i < incentivePools.length; i++) {
+            IncentivePoolInterface incentivePool = incentivePools[i];
+
+            vars.affilateLeftTransaction = incentivePool.affiliateToLeftTransactionNum(walletAddr);
+            vars.affilateClaimedTransaction = incentivePool.affiliateToClaimedTransactionNum(walletAddr);
+            vars.userLeftTransaction = incentivePool.userToLeftTransactionNum(walletAddr);
+            vars.userClaimedTransaction = incentivePool.userToClaimedTransactionNum(walletAddr);
+
+            vars.transactionNum =
+                vars.affilateLeftTransaction +
+                vars.affilateClaimedTransaction +
+                vars.userLeftTransaction +
+                vars.userClaimedTransaction;
+
+            if (vars.transactionNum > 0) {
+                vars.productNum++;
+                vars.totalTransactionNum += vars.transactionNum;
+
+                vars.affiliateAmountPerTransaction = (incentivePool.getIncentiveInfo()).affiliateAmountPerTransaction;
+                vars.userAmountPerTransaction = (incentivePool.getIncentiveInfo()).userAmountPerTransaction;
+
+                vars.claimed =
+                    vars.affilateClaimedTransaction *
+                    vars.affiliateAmountPerTransaction +
+                    vars.userClaimedTransaction *
+                    vars.userAmountPerTransaction;
+
+                vars.totalClaimed += vars.claimed;
+                vars.totalEarned +=
+                    vars.claimed +
+                    vars.affilateLeftTransaction *
+                    vars.affiliateAmountPerTransaction +
+                    vars.userLeftTransaction *
+                    vars.userAmountPerTransaction;
+            }
+        }
+
+        return (vars.totalClaimed, vars.totalEarned, vars.productNum, vars.totalTransactionNum);
+    }
+
     function createIncentivePool(CreateIncentivePoolReq memory req) external payable nonReentrant {
         IncentiveInfo memory info = req.incentiveInfo;
 
         require(msg.value >= poolCreationFee, "NOT_ENOUGHT_VALUE");
-        require(address(info.incentiveToken) != address(0), "INVALID_TOKEN_ADDRESS");
+        require(info.incentiveToken != address(0), "INVALID_TOKEN_ADDRESS");
         require(deployerToIncentivePool[msg.sender] == address(0), "PRODUCT_OWNED");
 
         uint256 initialAmount = info.leftTransactionNum * info.incentiveAmountPerTransaction;
-        info.incentiveToken.transferFrom(msg.sender, address(this), initialAmount);
+        IERC20(info.incentiveToken).transferFrom(msg.sender, address(this), initialAmount);
 
         DeployIncentivePoolReq memory params;
         params.deployer = msg.sender;
@@ -91,7 +156,7 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         isValidPool[address(incentivePool)] = true;
         deployerToIncentivePool[msg.sender] = address(incentivePool);
 
-        info.incentiveToken.approve(address(incentivePool), initialAmount);
+        IERC20(info.incentiveToken).approve(address(incentivePool), initialAmount);
         incentivePool.addLeftTransactionNum(info.leftTransactionNum);
 
         emit CreateIncentivePool(msg.sender, address(incentivePool), initialAmount);

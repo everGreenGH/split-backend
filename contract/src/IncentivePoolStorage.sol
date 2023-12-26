@@ -2,7 +2,7 @@ pragma solidity ^0.8.11;
 
 import "./interface/IncentivePoolInterface.sol";
 
-contract IncentivePoolStorage is IncentivePoolInterface {
+abstract contract IncentivePoolStorage is IncentivePoolInterface {
     /// @notice IncentivePoolFactory 컨트랙트 주소
     address public factory;
 
@@ -24,9 +24,15 @@ contract IncentivePoolStorage is IncentivePoolInterface {
     /// @notice 인센티브 관련 데이터
     IncentiveInfo public incentiveInfo;
 
+    mapping(address => mapping(address => bool)) isAffiliateUserRelated; // 헤당 추천인의 링크에 등록된 사용자인지 체크)
+
     mapping(address => ConnectedUserData) public affiliateToLeftTransactionNum;
 
     mapping(address => uint256) public userToLeftTransactionNum;
+
+    mapping(address => uint256) public affiliateToClaimedTransactionNum;
+
+    mapping(address => uint256) public userToClaimedTransactionNum;
 
     bool public isClaimPaused;
 

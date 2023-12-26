@@ -1,6 +1,7 @@
 pragma solidity ^0.8.11;
 
 import "./IncentivePoolStorage.sol";
+import "./common/token/IERC20.sol";
 
 contract IncentivePool is IncentivePoolStorage {
     modifier nonReentrant() {
@@ -21,6 +22,10 @@ contract IncentivePool is IncentivePoolStorage {
         isUpdatePaused = false;
 
         _notEntered = true;
+    }
+
+    function getIncentiveInfo() external view returns (IncentiveInfo memory) {
+        return incentiveInfo;
     }
 
     function getAffiliates() external view returns (address[] memory) {
@@ -51,7 +56,7 @@ contract IncentivePool is IncentivePoolStorage {
         require(msg.sender == factory || msg.sender == poolAdmin, "ACCESS_DENIED");
 
         uint256 addedIncentiveAmount = addedTransactionNum * incentiveInfo.incentiveAmountPerTransaction;
-        incentiveInfo.incentiveToken.transferFrom(msg.sender, address(this), addedIncentiveAmount);
+        IERC20(incentiveInfo.incentiveToken).transferFrom(msg.sender, address(this), addedIncentiveAmount);
 
         // msg.sender가 factory인 경우, 생성자에서 leftTransactionNum을 설정
         if (msg.sender != factory) {
@@ -72,9 +77,9 @@ contract IncentivePool is IncentivePoolStorage {
             // 추천인 정보 업데이트
             ConnectedUserData storage userData = affiliateToLeftTransactionNum[affiliate];
 
-            bool isRegisteredUser = userData.userToIsRegisteredUser[user];
+            bool isRegisteredUser = isAffiliateUserRelated[affiliate][user];
             if (!isRegisteredUser) {
-                userData.userToIsRegisteredUser[user] = true;
+                isAffiliateUserRelated[affiliate][user] = true;
                 userData.users.push(user);
             }
 
@@ -100,12 +105,14 @@ contract IncentivePool is IncentivePoolStorage {
 
         ConnectedUserData storage userData = affiliateToLeftTransactionNum[msg.sender];
         uint256 claimTransactionNum = userData.leftTransactionNum;
+
         userData.leftTransactionNum = 0;
+        affiliateToClaimedTransactionNum[msg.sender] += claimTransactionNum;
 
         require(claimTransactionNum > 0, "NO_TRANSACTION");
 
         uint256 claimValue = claimTransactionNum * incentiveInfo.affiliateAmountPerTransaction;
-        incentiveInfo.incentiveToken.transfer(msg.sender, claimValue);
+        IERC20(incentiveInfo.incentiveToken).transfer(msg.sender, claimValue);
 
         emit ClaimIncentive(msg.sender, ClaimType.AFFILIATE, claimTransactionNum, claimValue);
     }
@@ -117,9 +124,10 @@ contract IncentivePool is IncentivePoolStorage {
         require(claimTransactionNum > 0, "NO_TRANSACTION");
 
         userToLeftTransactionNum[msg.sender] = 0;
+        userToClaimedTransactionNum[msg.sender] += claimTransactionNum;
 
         uint256 claimValue = claimTransactionNum * incentiveInfo.userAmountPerTransaction;
-        incentiveInfo.incentiveToken.transfer(msg.sender, claimValue);
+        IERC20(incentiveInfo.incentiveToken).transfer(msg.sender, claimValue);
 
         emit ClaimIncentive(msg.sender, ClaimType.USER, claimTransactionNum, claimValue);
     }

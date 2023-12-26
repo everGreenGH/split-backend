@@ -1,10 +1,8 @@
 pragma solidity ^0.8.11;
 
-import "../common/token/IERC20.sol";
-
 interface CommonDtos {
     struct IncentiveInfo {
-        IERC20 incentiveToken;
+        address incentiveToken;
         uint256 incentiveAmountPerTransaction;
         uint256 affiliateAmountPerTransaction;
         uint256 userAmountPerTransaction;
@@ -20,6 +18,11 @@ interface CommonDtos {
     struct DeployIncentivePoolReq {
         address deployer;
         IncentiveInfo incentiveInfo;
+    }
+
+    struct ConnectedUserData {
+        address[] users; // 사용자 지갑 주소
+        uint256 leftTransactionNum; // 추천인이 보상을 받을 수 있는 (남아있는) TX 합
     }
 
     struct Referral {
