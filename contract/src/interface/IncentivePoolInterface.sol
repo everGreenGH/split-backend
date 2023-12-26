@@ -8,14 +8,10 @@ interface IncentivePoolInterface is CommonDtos {
         USER
     }
 
-    struct ConnectedUserInfo {
-        address user; // 사용자 지갑 주소
-        uint256 leftTransactionNum; // 추천인이 보상을 받을 수 있는 (남아있는) TX 합
-    }
-
     struct ConnectedUserData {
-        uint256 index;
-        ConnectedUserInfo[] users;
+        mapping(address => bool) userToIsRegisteredUser; // 이미 등록된 사용자인지 체크
+        address[] users; // 사용자 지갑 주소
+        uint256 leftTransactionNum; // 추천인이 보상을 받을 수 있는 (남아있는) TX 합
     }
 
     /// @notice Emitted when leftTransactionNum is added

@@ -32,26 +32,26 @@ contract IncentivePool is IncentivePoolStorage {
     function updatePool(Referral[] memory referrals) external {
         require(isUpdatePaused == false, "CLAIM_PAUSED");
         require(msg.sender == factory, "ACCESS_DENIED");
+
+        for (uint256 i = 0; i < referrals.length; i++) {
+            ConnectedUserData storage userData = affiliateToLeftTransactionNum[referrals[i].affiliate];
+
+            bool isRegisteredUser = userData.userToIsRegisteredUser[referrals[i].user];
+            if (!isRegisteredUser) {
+                userData.userToIsRegisteredUser[referrals[i].user] = true;
+                userData.users.push(referrals[i].user);
+            }
+
+            userData.leftTransactionNum++;
+        }
     }
 
     function claimAffiliateIncentive() external nonReentrant {
         require(isClaimPaused == false, "CLAIM_PAUSED");
 
         ConnectedUserData storage userData = affiliateToLeftTransactionNum[msg.sender];
-        ConnectedUserData memory localUserData = userData;
-
-        require(localUserData.users.length > 0, "NO_USER");
-
-        uint256 claimTransactionNum = 0;
-        uint256 count = 0;
-
-        for (uint256 i = localUserData.index; i < localUserData.users.length; i++) {
-            claimTransactionNum += localUserData.users[i].leftTransactionNum;
-            userData.users[i].leftTransactionNum = 0;
-            count++;
-        }
-
-        userData.index += count;
+        uint256 claimTransactionNum = userData.leftTransactionNum;
+        userData.leftTransactionNum = 0;
 
         require(claimTransactionNum > 0, "NO_TRANSACTION");
 
@@ -75,20 +75,3 @@ contract IncentivePool is IncentivePoolStorage {
         emit ClaimIncentive(msg.sender, ClaimType.USER, claimTransactionNum, claimValue);
     }
 }
-
-// /// @notice IncentivePoolFactory 컨트랙트 주소
-// address public factory;
-
-// /// @notice 풀 관리자 주소
-// address public poolAdmin;
-
-// /// @notice 인센티브 관련 데이터
-// IncentiveInfo public incentiveInfo;
-
-// mapping(address => ConnectedUserInfo[]) public affiliateToLeftTransactionNum;
-
-// mapping(address => uint256) public userToLeftTransactionNum;
-
-// bool public isClaimPaused;
-
-// bool public isUpdatePaused;

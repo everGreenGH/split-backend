@@ -5,9 +5,28 @@ import "./interface/IncentivePoolFactoryInterface.sol";
 import "./IncentivePool.sol";
 
 contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
+    ///  @notice List of product incentive pools
     IncentivePool[] public incentivePools;
+
+    ///  @notice Mapping of pool address to validness(is it deployed?)
+    mapping(address => bool) public isValidPool;
+
+    ///  @notice Pool creation fee paid by contract
+    ///  @dev Should be multiplied by unit of ether(1e18)
     uint256 public poolCreationFee;
+
+    ///  @notice Address of the master admin of split
     address public masterAdmin;
+
+    ///  @dev Guard variable for re-entrancy checks
+    bool internal _notEntered;
+
+    modifier nonReentrant() {
+        require(_notEntered, "ALREADY_ENTERED");
+        _notEntered = false;
+        _;
+        _notEntered = true; // get a gas-refund post-Istanbul
+    }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -19,7 +38,7 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         poolCreationFee = poolCreationFee_;
     }
 
-    function createIncentivePool(CreateIncentivePoolReq memory req) external payable {
+    function createIncentivePool(CreateIncentivePoolReq memory req) external payable nonReentrant {
         IncentiveInfo memory info = req.incentiveInfo;
 
         require(msg.value >= poolCreationFee, "NOT_ENOUGHT_VALUE");
@@ -34,10 +53,23 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
 
         IncentivePool incentivePool = new IncentivePool(params);
         incentivePools.push(incentivePool);
+        isValidPool[address(incentivePool)] = true;
 
         info.incentiveToken.approve(address(incentivePool), initialAmount);
         incentivePool.addLeftTransactionNum(info.leftTransactionNum);
 
-        // TODO: emit event
+        emit CreateIncentivePool(msg.sender, address(incentivePool), initialAmount);
+    }
+
+    function updateIncentivePools(UpdateIncentivePoolsReq memory req) external nonReentrant {
+        require(msg.sender == masterAdmin, "ACCESS_DENIED");
+
+        for (uint256 i = 0; i < req.info.length; i++) {
+            address poolAddress = req.info[i].incentivePoolAddress;
+            require(isValidPool[poolAddress], "INVALID_POOL_ADDRESS");
+
+            IncentivePool incentivePool = IncentivePool(poolAddress);
+            incentivePool.updatePool(req.info[i].referrals);
+        }
     }
 }
