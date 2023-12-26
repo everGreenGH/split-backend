@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { CheckPoolDeployedReq, CreateProductReq } from "./product.dtos";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "src/common/database/entities/product.entity";
@@ -6,13 +6,14 @@ import { Repository } from "typeorm";
 import { Transaction } from "src/common/database/entities/transaction.entity";
 import { WalletService } from "src/wallet/wallet.service";
 import * as crypto from "crypto";
+import { ContractFactory } from "src/common/contract/contract.factory";
 
 @Injectable()
 export class ProductService {
     constructor(
         @InjectRepository(Product) private readonly _productRepository: Repository<Product>,
-        @InjectRepository(Transaction) private readonly _transactionRepository: Repository<Transaction>,
         private readonly _walletService: WalletService,
+        private readonly _contractFactory: ContractFactory,
     ) {}
 
     async createProduct(address: string, req: CreateProductReq): Promise<Product> {
@@ -40,11 +41,13 @@ export class ProductService {
                 throw new UnauthorizedException("Invalid address", "CHECK_POOL_DEPLOY_ERROR");
             }
 
-            // TODO: 아래 로직 완성
-            /*
-                IncentivePoolFactory를 확인하여, 배포자 중에 product.wallet.address가 있는지 확인
-                존재할 시, 아래 로직 진행
-            */
+            const incentivePoolFactoryContract = this._contractFactory.incentivePoolFactory();
+
+            const deployers = await incentivePoolFactoryContract.getDeployers();
+            const isDeployerExist = deployers.some((deployer) => deployer.toLowerCase() === product.wallet.address);
+            if (!isDeployerExist) {
+                throw new NotFoundException("Deployer not found in contract", "CHECK_POOL_DEPLOY_ERROR");
+            }
 
             const apiKey = this._generateApiKey();
             const updatedProduct = await this._productRepository.save({
@@ -55,7 +58,7 @@ export class ProductService {
 
             return updatedProduct;
         } catch (error) {
-            if (error instanceof UnauthorizedException) {
+            if (error instanceof UnauthorizedException || error instanceof NotFoundException) {
                 throw error;
             } else {
                 throw new InternalServerErrorException("Check pool deploy error", "CHECK_POOL_DEPLOY_ERROR");
