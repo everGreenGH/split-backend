@@ -17,18 +17,33 @@ class sdk {
     console.log("v1.0.0");
   }
 
-  async init(apiKey) {
+  init(apiKey) {
+    axios.get('http://localhost:8000/auth/sdk', {
+      headers: {
+        'api-key': apiKey,
+      },
+    })
+      .then(response => {
+        console.log('auth request successful', response.data);
+      })
+      .catch(error => {
+        console.error('Error in referral request', error);
+      });
+
+
+  }
+
+  async referral(apiKey, userAdd, providerAdd) {
     try {
-      const response = await axios.get('http://localhost:8000/auth/sdk', {
+      const response = await axios.post(`http://localhost:8000/referral?userAddress=${userAdd}&referralProviderAddress=${providerAdd}`, null, {
         headers: {
           'api-key': apiKey,
         },
       });
-      const success = response.data === true;
-      return success;
+      return response.data.updated;
     } catch (error) {
-      console.error('Error in request', error);
-      throw error; 
+      console.error('Error in referral request', error);
+      throw new Error('Referral request failed'); // You can customize the error message
     }
   }
 }

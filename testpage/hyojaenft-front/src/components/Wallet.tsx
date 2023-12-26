@@ -1,9 +1,12 @@
 import { SocketAddress } from "net";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { useAddressStore } from "../stores/store";
+import useReferralRequest from '../hooks/useReferralRequest';
+import Split from '../../public/splitsdk/splitsdk';
+import { SplitSnackBar } from "./SplitSnackBar";
 
 const Container = styled.div`
   display: flex;
@@ -38,6 +41,12 @@ const StyledButton = styled.button`
   }
 `;
 
+declare global {
+  interface Window {
+    split: any;
+  }
+}
+
 interface WalletProps {
   account: string;
   setAccount: (account: string) => void;
@@ -45,6 +54,9 @@ interface WalletProps {
 
 export const Wallet = ({ account, setAccount }: WalletProps) => {
   const { setAddress } = useAddressStore();
+  const [affiliateAddress, setAffiliateAddress] = useState<string | null>(null);
+  const [showSnackBar, setShowSnackBar] = useState<boolean>(false); // Add state
+
 
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
@@ -54,9 +66,33 @@ export const Wallet = ({ account, setAccount }: WalletProps) => {
   const { disconnect } = useDisconnect();
   setAccount(address!);
 
+
   useEffect(() => {
-    setAddress(address);
-  }, [address]);
+    const fetchData = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const affiliateParam = urlParams.get("affiliate");
+
+      if (affiliateParam) {
+        setAffiliateAddress(affiliateParam);
+      }
+
+      try {
+        const split = window.split;
+        const res = await split.referral("c92f5b322d6d76d4981df4ce164e2151", address, affiliateParam);
+
+        if (res === 'true' || 'false') {
+          setShowSnackBar(true);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    if (isConnected) {
+      fetchData();
+    }
+  }, [isConnected,]);
+
 
   return (
     <Container>
@@ -70,6 +106,8 @@ export const Wallet = ({ account, setAccount }: WalletProps) => {
       ) : (
         <StyledButton onClick={() => connect()}>Connect Wallet</StyledButton>
       )}
+      {showSnackBar && <SplitSnackBar />}
     </Container>
   );
+
 };

@@ -7,7 +7,8 @@ const StyledSnackbar = styled.div`
   display: inline-flex;
   gap: 20px;
   padding: 10px 20px;
-  position: relative;
+  position: fixed;
+  top: 30;
 
   & .label {
     align-items: center;
