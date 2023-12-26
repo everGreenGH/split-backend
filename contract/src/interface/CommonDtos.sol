@@ -38,4 +38,20 @@ interface CommonDtos {
     struct UpdateIncentivePoolsReq {
         PoolUpdateInfo[] info;
     }
+
+    struct ProductInfo {
+        address incentivePoolAddress;
+        uint256 affiliateEarned;
+        uint256 affiliateClaimed;
+        uint256 userEarned;
+        uint256 userClaimed;
+    }
+
+    struct GetUserDashboardDataRes {
+        uint256 totalEarned;
+        uint256 totalClaimed;
+        uint256 productNum;
+        uint256 totalTransactionNum;
+        ProductInfo[] productInfos;
+    }
 }

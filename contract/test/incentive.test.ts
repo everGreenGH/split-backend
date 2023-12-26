@@ -245,15 +245,27 @@ describe("인센티브 풀 관련 테스트", () => {
             await secondIncentivePool.connect(user[5]).claimAffiliateIncentive();
             // await firstIncentivePool.connect(user[5]).claimUserIncentive();
 
-            const data = await incentivePoolFactory.getUserDashboardData(user[5].address);
+            const res = await incentivePoolFactory.getUserDashboardData(user[5].address);
 
-            expect(data[0]).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
-            expect(data[1]).to.equal(
+            expect(res.totalEarned).to.equal(
                 req.incentiveInfo.affiliateAmountPerTransaction.mul(3).add(req.incentiveInfo.userAmountPerTransaction),
             );
+            expect(res.totalClaimed).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
 
-            expect(data[2]).to.equal(BigNumber.from(2));
-            expect(data[3]).to.equal(BigNumber.from(4));
+            expect(res.productNum).to.equal(BigNumber.from(2));
+            expect(res.totalTransactionNum).to.equal(BigNumber.from(4));
+
+            const productInfos = await res.productInfos.filter(
+                (productInfo) => productInfo.incentivePoolAddress !== ethers.constants.AddressZero,
+            );
+
+            expect(productInfos[0].incentivePoolAddress).to.equal(firstIncentivePool.address);
+            expect(productInfos[0].userEarned).to.equal(req.incentiveInfo.userAmountPerTransaction);
+            expect(productInfos[0].userClaimed).to.equal(0);
+
+            expect(productInfos[1].incentivePoolAddress).to.equal(secondIncentivePool.address);
+            expect(productInfos[1].affiliateEarned).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
+            expect(productInfos[1].affiliateClaimed).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
         });
     });
 });

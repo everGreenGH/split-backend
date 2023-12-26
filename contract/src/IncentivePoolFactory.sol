@@ -79,21 +79,23 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         uint256 userClaimedTransaction;
         uint256 affiliateAmountPerTransaction;
         uint256 userAmountPerTransaction;
+        uint256 affiliateClaimed;
+        uint256 userClaimed;
         uint256 claimed;
-        uint256 totalClaimed;
-        uint256 totalEarned;
-        uint256 productNum;
+        uint256 affiliateEarned;
+        uint256 userEarned;
+        uint256 earned;
         uint256 transactionNum;
-        uint256 totalTransactionNum;
     }
 
-    function getUserDashboardData(address walletAddr) external view returns (uint256, uint256, uint256, uint256) {
+    function getUserDashboardData(address walletAddr) external view returns (GetUserDashboardDataRes memory res) {
         GetUserDashboardLocalVars memory vars;
 
-        vars.totalClaimed = 0;
-        vars.totalEarned = 0;
-        vars.productNum = 0;
-        vars.totalTransactionNum = 0;
+        res.totalClaimed = 0;
+        res.totalEarned = 0;
+        res.productNum = 0;
+        res.totalTransactionNum = 0;
+        res.productInfos = new ProductInfo[](incentivePools.length);
 
         for (uint256 i = 0; i < incentivePools.length; i++) {
             IncentivePoolInterface incentivePool = incentivePools[i];
@@ -110,29 +112,37 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
                 vars.userClaimedTransaction;
 
             if (vars.transactionNum > 0) {
-                vars.productNum++;
-                vars.totalTransactionNum += vars.transactionNum;
+                res.productNum++;
+                res.totalTransactionNum += vars.transactionNum;
 
                 vars.affiliateAmountPerTransaction = (incentivePool.getIncentiveInfo()).affiliateAmountPerTransaction;
                 vars.userAmountPerTransaction = (incentivePool.getIncentiveInfo()).userAmountPerTransaction;
 
-                vars.claimed =
-                    vars.affilateClaimedTransaction *
-                    vars.affiliateAmountPerTransaction +
-                    vars.userClaimedTransaction *
-                    vars.userAmountPerTransaction;
+                vars.affiliateClaimed = vars.affilateClaimedTransaction * vars.affiliateAmountPerTransaction;
+                vars.userClaimed = vars.userClaimedTransaction * vars.userAmountPerTransaction;
+                vars.claimed = vars.affiliateClaimed + vars.userClaimed;
 
-                vars.totalClaimed += vars.claimed;
-                vars.totalEarned +=
-                    vars.claimed +
+                res.totalClaimed += vars.claimed;
+
+                vars.affiliateEarned =
+                    vars.affiliateClaimed +
                     vars.affilateLeftTransaction *
-                    vars.affiliateAmountPerTransaction +
-                    vars.userLeftTransaction *
-                    vars.userAmountPerTransaction;
+                    vars.affiliateAmountPerTransaction;
+                vars.userEarned = vars.userClaimed + vars.userLeftTransaction * vars.userAmountPerTransaction;
+                vars.earned = vars.affiliateEarned + vars.userEarned;
+
+                res.totalEarned += vars.earned;
+
+                ProductInfo memory productInfo = ProductInfo(
+                    address(incentivePool),
+                    vars.affiliateEarned,
+                    vars.affiliateClaimed,
+                    vars.userEarned,
+                    vars.userClaimed
+                );
+                res.productInfos[i] = productInfo;
             }
         }
-
-        return (vars.totalClaimed, vars.totalEarned, vars.productNum, vars.totalTransactionNum);
     }
 
     function createIncentivePool(CreateIncentivePoolReq memory req) external payable nonReentrant {

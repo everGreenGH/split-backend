@@ -3,7 +3,7 @@
   "chainId": "89",
   "contracts": {
     "IncentivePoolFactory_Implementation": {
-      "address": "0x5424cab141b265e17559dCf3FFbA1D0E43bA310b",
+      "address": "0xF544c2B4aaCfdEEE8Ef6309D130cdA20D4419826",
       "abi": [
         {
           "inputs": [],
@@ -55,7 +55,7 @@
                 {
                   "components": [
                     {
-                      "internalType": "contract IERC20",
+                      "internalType": "address",
                       "name": "incentiveToken",
                       "type": "address"
                     },
@@ -164,6 +164,79 @@
               "internalType": "address[]",
               "name": "",
               "type": "address[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "walletAddr",
+              "type": "address"
+            }
+          ],
+          "name": "getUserDashboardData",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "totalEarned",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "totalClaimed",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "productNum",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "totalTransactionNum",
+                  "type": "uint256"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "incentivePoolAddress",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "affiliateEarned",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "affiliateClaimed",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "userEarned",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "userClaimed",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct CommonDtos.ProductInfo[]",
+                  "name": "productInfos",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "struct CommonDtos.GetUserDashboardDataRes",
+              "name": "res",
+              "type": "tuple"
             }
           ],
           "stateMutability": "view",
@@ -298,7 +371,7 @@
       ]
     },
     "IncentivePoolFactory_Proxy": {
-      "address": "0xb3d4042E016C6d931aA236E2d4805C3ab67E6e2d",
+      "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
       "abi": [
         {
           "inputs": [
@@ -446,7 +519,7 @@
       ]
     },
     "IncentivePoolFactory": {
-      "address": "0xb3d4042E016C6d931aA236E2d4805C3ab67E6e2d",
+      "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
       "abi": [
         {
           "anonymous": false,
@@ -615,7 +688,7 @@
                 {
                   "components": [
                     {
-                      "internalType": "contract IERC20",
+                      "internalType": "address",
                       "name": "incentiveToken",
                       "type": "address"
                     },
@@ -724,6 +797,79 @@
               "internalType": "address[]",
               "name": "",
               "type": "address[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "walletAddr",
+              "type": "address"
+            }
+          ],
+          "name": "getUserDashboardData",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "totalEarned",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "totalClaimed",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "productNum",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "totalTransactionNum",
+                  "type": "uint256"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "incentivePoolAddress",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "affiliateEarned",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "affiliateClaimed",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "userEarned",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "userClaimed",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct CommonDtos.ProductInfo[]",
+                  "name": "productInfos",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "struct CommonDtos.GetUserDashboardDataRes",
+              "name": "res",
+              "type": "tuple"
             }
           ],
           "stateMutability": "view",
@@ -879,7 +1025,7 @@
       ]
     },
     "USDC": {
-      "address": "0xBdd33473bB10364e54Ca4D8fdDE3AE6042A2Ba31",
+      "address": "0x41BD54223da66B5654e50861dfc221405cA8f482",
       "abi": [
         {
           "inputs": [

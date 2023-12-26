@@ -1,5 +1,5 @@
 {
-  "address": "0xb3d4042E016C6d931aA236E2d4805C3ab67E6e2d",
+  "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
   "abi": [
     {
       "anonymous": false,
@@ -168,7 +168,7 @@
             {
               "components": [
                 {
-                  "internalType": "contract IERC20",
+                  "internalType": "address",
                   "name": "incentiveToken",
                   "type": "address"
                 },
@@ -277,6 +277,79 @@
           "internalType": "address[]",
           "name": "",
           "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "walletAddr",
+          "type": "address"
+        }
+      ],
+      "name": "getUserDashboardData",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "totalEarned",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalClaimed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "productNum",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalTransactionNum",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "incentivePoolAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "affiliateEarned",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "affiliateClaimed",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "userEarned",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "userClaimed",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct CommonDtos.ProductInfo[]",
+              "name": "productInfos",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct CommonDtos.GetUserDashboardDataRes",
+          "name": "res",
+          "type": "tuple"
         }
       ],
       "stateMutability": "view",
@@ -430,48 +503,48 @@
       "type": "constructor"
     }
   ],
-  "transactionHash": "0x68886acb8ebc8c0f3449ec479e05535a6f823a51a1bcb3b61dee2a0c47df97cf",
+  "transactionHash": "0x38304a632395b1d8457cafd5e266f3a54de7d4a96c7b44621ae855b62854ec09",
   "receipt": {
     "to": null,
     "from": "0x3cA21C8364a6B132E30508cE030649a9883d4D8D",
-    "contractAddress": "0xb3d4042E016C6d931aA236E2d4805C3ab67E6e2d",
+    "contractAddress": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
     "transactionIndex": 1,
-    "gasUsed": "876485",
-    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000001000000000000000000400000100000000000000000000000000000000000000000000000000000000000000000000000001000080000000000000000000000000000000220000000000000000000800000000000000000000000000004000400000000000004000000000000000000000000000000080000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000040000000020100000000000000000000020000000000000000000000400000000000000000001000000000000000000000000",
-    "blockHash": "0x84c82a5f05bc16f3bf8ff26a5d7ec5f18e63cb58694ce1d035acb6cb33de588d",
-    "transactionHash": "0x68886acb8ebc8c0f3449ec479e05535a6f823a51a1bcb3b61dee2a0c47df97cf",
+    "gasUsed": "876463",
+    "logsBloom": "0x01000000000000000000000000000000000000000000000000800000000000000000000000000000000400000100000000800000000000000000000000000000000000000000000000000000000000000001000000000400000000000000000000000000020000000000000000000800000004000000000000000000004000400000000000000000000000000000000100000000000080000000000000000000000000000000000000000000000600000000000000000000000000000040000000000000000000000000000000040000000020000000000000000000000020000000000000000000000400000000000000000000000000000000000000000000",
+    "blockHash": "0x195baf1a079ba7cf3d64f8802426d1e2dc7fecfb5b454b5e43ba4409cc3d9e8c",
+    "transactionHash": "0x38304a632395b1d8457cafd5e266f3a54de7d4a96c7b44621ae855b62854ec09",
     "logs": [
       {
         "transactionIndex": 1,
-        "blockNumber": 312889,
-        "transactionHash": "0x68886acb8ebc8c0f3449ec479e05535a6f823a51a1bcb3b61dee2a0c47df97cf",
-        "address": "0xb3d4042E016C6d931aA236E2d4805C3ab67E6e2d",
+        "blockNumber": 318010,
+        "transactionHash": "0x38304a632395b1d8457cafd5e266f3a54de7d4a96c7b44621ae855b62854ec09",
+        "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
         "topics": [
           "0x5570d70a002632a7b0b3c9304cc89efb62d8da9eca0dbd7752c83b7379068296",
           "0x0000000000000000000000000000000000000000000000000000000000000000",
-          "0x0000000000000000000000005424cab141b265e17559dcf3ffba1d0e43ba310b"
+          "0x000000000000000000000000f544c2b4aacfdeee8ef6309d130cda20d4419826"
         ],
         "data": "0x",
         "logIndex": 1,
-        "blockHash": "0xa4663f93405ba9cf9c0175ff3fa5ec90a5933abf476c5480873ca8006bf88ec5"
+        "blockHash": "0xb42f8c318c2b25bc5fc956438f9460424b12e17dc93049dd3dad1f3b5cd15d93"
       },
       {
         "transactionIndex": 1,
-        "blockNumber": 312889,
-        "transactionHash": "0x68886acb8ebc8c0f3449ec479e05535a6f823a51a1bcb3b61dee2a0c47df97cf",
-        "address": "0xb3d4042E016C6d931aA236E2d4805C3ab67E6e2d",
+        "blockNumber": 318010,
+        "transactionHash": "0x38304a632395b1d8457cafd5e266f3a54de7d4a96c7b44621ae855b62854ec09",
+        "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
         "topics": [
           "0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498"
         ],
         "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
         "logIndex": 2,
-        "blockHash": "0xa4663f93405ba9cf9c0175ff3fa5ec90a5933abf476c5480873ca8006bf88ec5"
+        "blockHash": "0xb42f8c318c2b25bc5fc956438f9460424b12e17dc93049dd3dad1f3b5cd15d93"
       },
       {
         "transactionIndex": 1,
-        "blockNumber": 312889,
-        "transactionHash": "0x68886acb8ebc8c0f3449ec479e05535a6f823a51a1bcb3b61dee2a0c47df97cf",
-        "address": "0xb3d4042E016C6d931aA236E2d4805C3ab67E6e2d",
+        "blockNumber": 318010,
+        "transactionHash": "0x38304a632395b1d8457cafd5e266f3a54de7d4a96c7b44621ae855b62854ec09",
+        "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
         "topics": [
           "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
           "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -479,16 +552,16 @@
         ],
         "data": "0x",
         "logIndex": 3,
-        "blockHash": "0xa4663f93405ba9cf9c0175ff3fa5ec90a5933abf476c5480873ca8006bf88ec5"
+        "blockHash": "0xb42f8c318c2b25bc5fc956438f9460424b12e17dc93049dd3dad1f3b5cd15d93"
       }
     ],
-    "blockNumber": 312889,
-    "cumulativeGasUsed": "876485",
+    "blockNumber": 318010,
+    "cumulativeGasUsed": "876463",
     "status": 1,
     "byzantium": true
   },
   "args": [
-    "0x5424cab141b265e17559dCf3FFbA1D0E43bA310b",
+    "0xF544c2B4aaCfdEEE8Ef6309D130cdA20D4419826",
     "0x3cA21C8364a6B132E30508cE030649a9883d4D8D",
     "0xcd6dc6870000000000000000000000003ca21c8364a6b132e30508ce030649a9883d4d8d00000000000000000000000000000000000000000000000000005af3107a4000"
   ],
@@ -507,7 +580,7 @@
       }
     ]
   },
-  "implementation": "0x5424cab141b265e17559dCf3FFbA1D0E43bA310b",
+  "implementation": "0xF544c2B4aaCfdEEE8Ef6309D130cdA20D4419826",
   "devdoc": {
     "kind": "dev",
     "methods": {},
