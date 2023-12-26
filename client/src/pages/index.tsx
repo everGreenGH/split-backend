@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import s from "./index.module.scss";
 import axios from 'axios';
 
+
 export default function Home() {
   const { loginState, walletState, connectWalletHandler } = useConnectWallet();
   const [productId, setProductId] = useState(0);
+  const [apiKey, setApiKey] = useState('');
   const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiMHg3NDc2NDk0YWFkODBhNTA0MTczMzY0ZThlZDBiYzFjNjViZDg2NjBiIiwiaWF0IjoxNzAzNDg2MzcxLCJleHAiOjE3MDM1ODYzNzF9._aDmHaLCPvTQt8w6ZBI_CA-EISCJ0wg-RZqDvKXbXGM"; 
 
   const productHandler = async () => {
@@ -55,6 +57,8 @@ export default function Home() {
       });
   
       console.log('Deploy successful:', response.data);
+      setApiKey(response.data.apiKey);
+  
     } catch (error) {
       console.error('Error deploying product:', error);
     }

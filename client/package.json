@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "web": "webpack"
   },
   "dependencies": {
     "axios": "^1.6.2",
@@ -16,7 +17,9 @@
     "react-dom": "^18",
     "sass": "^1.69.5",
     "siwe": "^2.1.4",
-    "wagmi": "^1.4.8"
+    "wagmi": "^1.4.8",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
     "@types/node": "20.10.5",
