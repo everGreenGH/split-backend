@@ -112,6 +112,7 @@ export class ReferralService {
             // 2. Type parsing
             const parsedReferrals = this._referralParser(notUpdatedReferrals);
 
+            // TODO: 트랜잭션 유효성 검사 로직 추가
             // FIXME: Transaction으로 수정 필요 (4번 실패시 3번 롤백될 수 있도록)
             // 3. DB에 업데이트 반영
             const updatedReferrals = notUpdatedReferrals.map((referral) => ({ ...referral, isUpdated: true }));

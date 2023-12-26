@@ -85,4 +85,9 @@ export class ProductService {
         const product = await this._productRepository.findOne({ where: { apiKey } });
         return product;
     }
+
+    async findProductByPoolAddress(poolAddress: string) {
+        const product = await this._productRepository.findOne({ where: { poolAddress } });
+        return product;
+    }
 }

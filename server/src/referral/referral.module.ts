@@ -12,5 +12,6 @@ import { ContractFactory } from "src/common/contract/contract.factory";
     imports: [TypeOrmModule.forFeature([Referral, Wallet]), WalletModule],
     controllers: [ReferralController],
     providers: [ReferralService, ReferralRepository, ContractFactory],
+    exports: [ReferralService, ReferralRepository],
 })
 export class ReferralModule {}

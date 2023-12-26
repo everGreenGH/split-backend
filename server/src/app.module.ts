@@ -13,6 +13,7 @@ import { WalletModule } from "./wallet/wallet.module";
 import { ReferralModule } from "./referral/referral.module";
 import { ProductModule } from "./product/product.module";
 import { AuthModule } from "./auth/auth.module";
+import { DashboardModule } from './dashboard/dashboard.module';
 import jwtConfig from "./common/config/jwt.config";
 
 @Module({
@@ -35,6 +36,7 @@ import jwtConfig from "./common/config/jwt.config";
         ReferralModule,
         ProductModule,
         AuthModule,
+        DashboardModule,
     ],
     controllers: [],
     providers: [],
