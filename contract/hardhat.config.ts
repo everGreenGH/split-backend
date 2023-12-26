@@ -8,7 +8,7 @@ import "@openzeppelin/hardhat-upgrades";
 import "hardhat-log-remover";
 import "hardhat-contract-sizer";
 import { Network } from "@constants";
-import { GAS_PRICE as TESTNET_GAS_PRICE } from "@constants/testnet";
+import { GAS_PRICE as TESTNET_GAS_PRICE } from "@constants/viction_testnet";
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-ethers";
@@ -72,7 +72,7 @@ const config: HardhatUserConfig = {
             chainId: 1337,
         },
         // replace with your network configuration
-        testnet: {
+        viction_testnet: {
             url: PROVIDER_URL || "",
             chainId: +(CHAIN_ID || 0),
             from: DEVELOPER_ACCOUNT || "",
