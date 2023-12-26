@@ -3,7 +3,6 @@ pragma solidity ^0.8.11;
 import "./common/upgradeable/Initializable.sol";
 import "./interface/IncentivePoolFactoryInterface.sol";
 import "./IncentivePool.sol";
-import "hardhat/console.sol";
 
 contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
     ///  @notice List of product incentive pools

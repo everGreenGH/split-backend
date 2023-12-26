@@ -1,7 +1,6 @@
 pragma solidity ^0.8.11;
 
 import "./IncentivePoolStorage.sol";
-import "hardhat/console.sol";
 
 contract IncentivePool is IncentivePoolStorage {
     modifier nonReentrant() {
