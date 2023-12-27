@@ -1,4 +1,4 @@
-import { Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 import { Wallet } from "./wallet.entity";
 import { CoreEntity } from "./core.entity";
 import { Product } from "./product.entity";
@@ -13,4 +13,7 @@ export class Referral extends CoreEntity {
 
     @ManyToOne(() => Product)
     product: Product;
+
+    @Column({ default: false })
+    isUpdated: boolean;
 }

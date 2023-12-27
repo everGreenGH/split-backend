@@ -5,6 +5,7 @@ import { ApiBasicAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { ApiKeyGuard } from "src/common/guards/api-key.guard";
 import { Request } from "express";
+import { Product } from "src/common/database/entities/product.entity";
 
 @Controller("referral")
 export class ReferralController {
@@ -20,6 +21,13 @@ export class ReferralController {
         summary: "광고주 페이지에서 사용자가 지갑 연결 시 SDK가 호출하는 엔드포인트",
     })
     async addReferral(@Req() req: Request, @Query() query: AddReferralReq): Promise<AddReferralRes> {
-        return this._referralService.addReferral(req.product, query);
+        const product = req.user as Product;
+        return this._referralService.addReferral(product, query);
+    }
+
+    // TODO: Cron, Guard 추가
+    @Post("update")
+    async updateReferral() {
+        return this._referralService.updateReferral();
     }
 }

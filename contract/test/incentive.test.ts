@@ -101,6 +101,11 @@ describe("인센티브 풀 관련 테스트", () => {
         it("신규 풀 초기 설정이 정상적으로 이루어지는가?", async () => {
             // factory 설정 확인
             expect(await incentivePoolFactory.isValidPool(firstIncentivePool.address)).to.equal(true);
+            expect(await incentivePoolFactory.deployerToIncentivePool(user[0].address)).to.equal(
+                firstIncentivePool.address,
+            );
+            expect((await incentivePoolFactory.getIncentivePoolAddresses())[0]).to.equal(firstIncentivePool.address);
+            expect((await incentivePoolFactory.getDeployers())[0]).to.equal(user[0].address);
 
             // 주소 설정 확인
             expect(await firstIncentivePool.factory()).to.equal(incentivePoolFactory.address);
@@ -189,6 +194,17 @@ describe("인센티브 풀 관련 테스트", () => {
             expect(user5TransactionNum).to.equal(3);
         });
 
+        it("풀 전체 데이터 업데이트가 정상적으로 이루어지는가?", async () => {
+            const affiliates = await firstIncentivePool.getAffiliates();
+            expect(affiliates[0]).to.equal(user[2].address);
+            expect(affiliates[1]).to.equal(user[4].address);
+
+            const users = await firstIncentivePool.getUsers();
+            expect(users[0]).to.equal(user[3].address);
+            expect(users[1]).to.equal(user[5].address);
+            expect(users[2]).to.equal(user[6].address);
+        });
+
         it("관리자가 아닌 유저가 업데이트를 시도할 시 revert되는가?", async () => {
             await expect(incentivePoolFactory.connect(user[0]).updateIncentivePools(updateReq)).to.revertedWith(
                 "ACCESS_DENIED",
@@ -201,8 +217,16 @@ describe("인센티브 풀 관련 테스트", () => {
                 req.incentiveInfo.affiliateAmountPerTransaction.mul(3),
             );
 
+            expect(await firstIncentivePool.affiliateToClaimedTransactionNum(user[4].address)).to.equal(
+                BigNumber.from(3),
+            );
+
             await firstIncentivePool.connect(user[2]).claimAffiliateIncentive();
             expect(await testUSDC.balanceOf(user[2].address)).to.equal(req.incentiveInfo.affiliateAmountPerTransaction);
+
+            expect(await firstIncentivePool.affiliateToClaimedTransactionNum(user[2].address)).to.equal(
+                BigNumber.from(1),
+            );
 
             const leftAmount = initialAmount.sub(req.incentiveInfo.affiliateAmountPerTransaction.mul(4));
             expect(await testUSDC.balanceOf(firstIncentivePool.address)).to.equal(leftAmount);
@@ -213,6 +237,35 @@ describe("인센티브 풀 관련 테스트", () => {
             expect(await testUSDC.balanceOf(user[6].address)).to.equal(
                 req.incentiveInfo.userAmountPerTransaction.mul(2),
             );
+
+            expect(await firstIncentivePool.userToClaimedTransactionNum(user[6].address)).to.equal(BigNumber.from(2));
+        });
+
+        it("getUserDashboardData 데이터가 정상적으로 반환되는가?", async () => {
+            await secondIncentivePool.connect(user[5]).claimAffiliateIncentive();
+            // await firstIncentivePool.connect(user[5]).claimUserIncentive();
+
+            const res = await incentivePoolFactory.getUserDashboardData(user[5].address);
+
+            expect(res.totalEarned).to.equal(
+                req.incentiveInfo.affiliateAmountPerTransaction.mul(3).add(req.incentiveInfo.userAmountPerTransaction),
+            );
+            expect(res.totalClaimed).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
+
+            expect(res.productNum).to.equal(BigNumber.from(2));
+            expect(res.totalTransactionNum).to.equal(BigNumber.from(4));
+
+            const productInfos = await res.productInfos.filter(
+                (productInfo) => productInfo.incentivePoolAddress !== ethers.constants.AddressZero,
+            );
+
+            expect(productInfos[0].incentivePoolAddress).to.equal(firstIncentivePool.address);
+            expect(productInfos[0].userEarned).to.equal(req.incentiveInfo.userAmountPerTransaction);
+            expect(productInfos[0].userClaimed).to.equal(0);
+
+            expect(productInfos[1].incentivePoolAddress).to.equal(secondIncentivePool.address);
+            expect(productInfos[1].affiliateEarned).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
+            expect(productInfos[1].affiliateClaimed).to.equal(req.incentiveInfo.affiliateAmountPerTransaction.mul(3));
         });
     });
 });

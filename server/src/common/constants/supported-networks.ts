@@ -3,6 +3,7 @@ export enum SupportedNetworks {
     POLYGON = "Polygon",
     BNB = "BNB",
     OPTIMISM = "Optimism",
+    VICTION = "Viction",
     AVALANCHE = "Avalanche",
     ARBITRUM = "Arbitrum",
     FANTOM = "Fantom",
