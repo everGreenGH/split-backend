@@ -4,7 +4,7 @@ import "./common/upgradeable/Initializable.sol";
 import "./interface/IncentivePoolFactoryInterface.sol";
 import "./IncentivePool.sol";
 import "./interface/IncentivePoolInterface.sol";
-import "./common/token/IERC20.sol";
+import "./common/token/IVRC25.sol";
 
 contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
     ///  @notice List of product incentive pools
@@ -153,7 +153,7 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         require(deployerToIncentivePool[msg.sender] == address(0), "PRODUCT_OWNED");
 
         uint256 initialAmount = info.leftTransactionNum * info.incentiveAmountPerTransaction;
-        IERC20(info.incentiveToken).transferFrom(msg.sender, address(this), initialAmount);
+        IVRC25(info.incentiveToken).transferFrom(msg.sender, address(this), initialAmount);
 
         DeployIncentivePoolReq memory params;
         params.deployer = msg.sender;
@@ -166,7 +166,7 @@ contract IncentivePoolFactory is IncentivePoolFactoryInterface, Initializable {
         isValidPool[address(incentivePool)] = true;
         deployerToIncentivePool[msg.sender] = address(incentivePool);
 
-        IERC20(info.incentiveToken).approve(address(incentivePool), initialAmount);
+        IVRC25(info.incentiveToken).approve(address(incentivePool), initialAmount);
         incentivePool.addLeftTransactionNum(info.leftTransactionNum);
 
         emit CreateIncentivePool(msg.sender, address(incentivePool), initialAmount);

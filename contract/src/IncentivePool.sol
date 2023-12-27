@@ -1,7 +1,7 @@
 pragma solidity ^0.8.11;
 
 import "./IncentivePoolStorage.sol";
-import "./common/token/IERC20.sol";
+import "./common/token/IVRC25.sol";
 
 contract IncentivePool is IncentivePoolStorage {
     modifier nonReentrant() {
@@ -56,7 +56,7 @@ contract IncentivePool is IncentivePoolStorage {
         require(msg.sender == factory || msg.sender == poolAdmin, "ACCESS_DENIED");
 
         uint256 addedIncentiveAmount = addedTransactionNum * incentiveInfo.incentiveAmountPerTransaction;
-        IERC20(incentiveInfo.incentiveToken).transferFrom(msg.sender, address(this), addedIncentiveAmount);
+        IVRC25(incentiveInfo.incentiveToken).transferFrom(msg.sender, address(this), addedIncentiveAmount);
 
         // msg.sender가 factory인 경우, 생성자에서 leftTransactionNum을 설정
         if (msg.sender != factory) {
@@ -112,7 +112,7 @@ contract IncentivePool is IncentivePoolStorage {
         require(claimTransactionNum > 0, "NO_TRANSACTION");
 
         uint256 claimValue = claimTransactionNum * incentiveInfo.affiliateAmountPerTransaction;
-        IERC20(incentiveInfo.incentiveToken).transfer(msg.sender, claimValue);
+        IVRC25(incentiveInfo.incentiveToken).transfer(msg.sender, claimValue);
 
         emit ClaimIncentive(msg.sender, ClaimType.AFFILIATE, claimTransactionNum, claimValue);
     }
@@ -127,7 +127,7 @@ contract IncentivePool is IncentivePoolStorage {
         userToClaimedTransactionNum[msg.sender] += claimTransactionNum;
 
         uint256 claimValue = claimTransactionNum * incentiveInfo.userAmountPerTransaction;
-        IERC20(incentiveInfo.incentiveToken).transfer(msg.sender, claimValue);
+        IVRC25(incentiveInfo.incentiveToken).transfer(msg.sender, claimValue);
 
         emit ClaimIncentive(msg.sender, ClaimType.USER, claimTransactionNum, claimValue);
     }
