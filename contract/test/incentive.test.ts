@@ -156,6 +156,8 @@ describe("인센티브 풀 관련 테스트", () => {
                             { affiliate: user[4].address, user: user[5].address },
                             { affiliate: user[4].address, user: user[6].address },
                             { affiliate: user[4].address, user: user[6].address },
+                            { affiliate: user[7].address, user: user[8].address },
+                            { affiliate: user[8].address, user: user[7].address },
                         ],
                     },
                     {
@@ -230,6 +232,13 @@ describe("인센티브 풀 관련 테스트", () => {
 
             const leftAmount = initialAmount.sub(req.incentiveInfo.affiliateAmountPerTransaction.mul(4));
             expect(await testUSDC.balanceOf(firstIncentivePool.address)).to.equal(leftAmount);
+        });
+
+        it("중복 클레임 시 정상적으로 에러를 반환하는가?", async () => {
+            await firstIncentivePool.connect(user[7]).claimAffiliateIncentive();
+            await expect(firstIncentivePool.connect(user[7]).claimAffiliateIncentive()).to.revertedWith(
+                "NO_TRANSACTION",
+            );
         });
 
         it("사용자 클레임이 정상적으로 이루어지는가?", async () => {
