@@ -4,6 +4,7 @@ import { CheckPoolDeployedReq, CreateProductReq } from "./product.dtos";
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam } from "@nestjs/swagger";
 import { JWTGuard } from "src/common/guards/jwt.guard";
 import { Request } from "express";
+import { Wallet } from "src/common/database/entities/wallet.entity";
 
 @Controller("product")
 export class ProductController {
@@ -18,7 +19,8 @@ export class ProductController {
         summary: "제품 및 트랜잭션 정보를 받아서 데이터베이스에 저장",
     })
     async createProduct(@Req() req: Request, @Body() body: CreateProductReq) {
-        return this._productService.createProduct(req.user.address, body);
+        const user = req.user as Wallet;
+        return this._productService.createProduct(user.address, body);
     }
 
     @UseGuards(JWTGuard)
@@ -29,7 +31,8 @@ export class ProductController {
         summary: "컨트랙트 배포 후 풀 주소 정보를 업데이트하고, ApiKey를 생성하여 저장 후 반환",
     })
     async checkPoolDeployed(@Req() req: Request, @Query() query: CheckPoolDeployedReq) {
-        return this._productService.checkPoolDeployed(req.user.address, query);
+        const user = req.user as Wallet;
+        return this._productService.checkPoolDeployed(user.address, query);
     }
 
     @Get()

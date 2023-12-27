@@ -4,7 +4,6 @@ import { Wallet } from "../database/entities/wallet.entity";
 
 declare module "express" {
     interface Request extends Req {
-        user?: Wallet;
-        product?: Product;
+        user?: Wallet | Product;
     }
 }
