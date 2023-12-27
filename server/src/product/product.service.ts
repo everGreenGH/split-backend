@@ -1,4 +1,10 @@
-import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    InternalServerErrorException,
+    NotFoundException,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { CheckPoolDeployedReq, CreateProductReq } from "./product.dtos";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "src/common/database/entities/product.entity";
@@ -36,6 +42,9 @@ export class ProductService {
     async checkPoolDeployed(address: string, req: CheckPoolDeployedReq): Promise<Product> {
         try {
             const product = await this.findProductById(req.id);
+            if (!product) {
+                throw new BadRequestException("Invalid product id", "CHECK_POOL_DEPLOY_ERROR");
+            }
             if (address !== product.wallet.address) {
                 throw new UnauthorizedException("Invalid address", "CHECK_POOL_DEPLOY_ERROR");
             }
@@ -59,7 +68,11 @@ export class ProductService {
 
             return updatedProduct;
         } catch (error) {
-            if (error instanceof UnauthorizedException || error instanceof NotFoundException) {
+            if (
+                error instanceof UnauthorizedException ||
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
                 throw error;
             } else {
                 throw new InternalServerErrorException("Check pool deploy error", "CHECK_POOL_DEPLOY_ERROR");

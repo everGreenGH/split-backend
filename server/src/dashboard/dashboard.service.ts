@@ -35,7 +35,8 @@ export class DashboardService {
                         claimed: affiliateClaimed,
                     },
                 });
-            } else if (userEarned || userClaimed) {
+            }
+            if (userEarned || userClaimed) {
                 products.push({
                     cardType: CardType.USER,
                     cardData: {
@@ -61,12 +62,12 @@ export class DashboardService {
 
     async getEarnDashboard(wallet: Wallet): Promise<GetEarnDashboardRes> {
         const incentivePoolFactory = this._contractFactory.incentivePoolFactory();
-        const res = await incentivePoolFactory.getUserDashboardData("0xc4f9e156e16fddce41f563bebcba3dc16f5b1770"); // FIXME: 테스트 값 변경 후 수정
+        const res = await incentivePoolFactory.getUserDashboardData(wallet.address);
 
         const products = await this._getParsedProducts(res.productInfos);
-        const walletConnectNum = await this._referralRepository.getUserCountByReferralProvider(
-            "0xc4f9e156e16fddce41f563bebcba3dc16f5b1770",
-        ); // FIXME: 테스트 값 변경 후 수정
+        const walletConnectNum =
+            (await this._referralRepository.getReferralProviderCount(wallet.address)) +
+            (await this._referralRepository.getUserCount(wallet.address));
 
         const transactionNum = Number(res.totalTransactionNum);
         const conversion = this._calculateConversion(walletConnectNum, transactionNum);

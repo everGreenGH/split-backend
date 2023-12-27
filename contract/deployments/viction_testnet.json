@@ -3,7 +3,7 @@
   "chainId": "89",
   "contracts": {
     "IncentivePoolFactory_Implementation": {
-      "address": "0xF544c2B4aaCfdEEE8Ef6309D130cdA20D4419826",
+      "address": "0x3458B6920eA4DF5702AC7AC3a07A5B9382250Cfa",
       "abi": [
         {
           "inputs": [],
@@ -371,7 +371,7 @@
       ]
     },
     "IncentivePoolFactory_Proxy": {
-      "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
+      "address": "0x87F7117cf410A8e21b645450E372201a70630D85",
       "abi": [
         {
           "inputs": [
@@ -519,7 +519,7 @@
       ]
     },
     "IncentivePoolFactory": {
-      "address": "0x2273B16fcf22AE16e2061E78D1997cb5c2F8E2BA",
+      "address": "0x87F7117cf410A8e21b645450E372201a70630D85",
       "abi": [
         {
           "anonymous": false,
@@ -1025,7 +1025,7 @@
       ]
     },
     "USDC": {
-      "address": "0x41BD54223da66B5654e50861dfc221405cA8f482",
+      "address": "0xe03a1a63528C0625dC5ccbfD0B572Fa33213451D",
       "abi": [
         {
           "inputs": [

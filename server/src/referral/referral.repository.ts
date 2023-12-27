@@ -39,12 +39,19 @@ export class ReferralRepository {
             .getMany();
     }
 
-    async getUserCountByReferralProvider(referralProviderAddress: string): Promise<number> {
+    async getReferralProviderCount(referralProviderAddress: string): Promise<number> {
         return await this._referralRepository
             .createQueryBuilder("referral")
             .leftJoinAndSelect("referral.referralProvider", "provider")
-            .leftJoinAndSelect("referral.user", "user")
             .where("provider.address = :referralProviderAddress", { referralProviderAddress })
+            .getCount();
+    }
+
+    async getUserCount(userAddress: string): Promise<number> {
+        return await this._referralRepository
+            .createQueryBuilder("referral")
+            .leftJoinAndSelect("referral.user", "user")
+            .where("user.address = :userAddress", { userAddress })
             .getCount();
     }
 
