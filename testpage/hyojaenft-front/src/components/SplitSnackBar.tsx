@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 const StyledSnackbar = styled.div`
   align-items: center;
-  background-color: #a5a5a5d9;
+  background: rgba(152, 152, 152, 0.85);
   border-radius: 20px;
   display: inline-flex;
   gap: 20px;
@@ -12,6 +12,7 @@ const StyledSnackbar = styled.div`
   position: fixed;
   top: 20;
   transition: top 0.5s ease;
+  color: white;
 
   & .label {
     align-items: center;
@@ -84,11 +85,11 @@ export const SplitSnackBar: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-          setShowSnackbar(true);
-        }, 800); 
-    
+            setShowSnackbar(true);
+        }, 800);
+
         return () => clearTimeout(timeout);
-      }, []);
+    }, []);
 
     const handleButtonClick = () => {
         window.open('http://localhost:3000/', '_blank');

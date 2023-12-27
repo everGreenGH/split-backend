@@ -8,7 +8,7 @@ export default function Home() {
   const { loginState, walletState, connectWalletHandler } = useConnectWallet();
   const [productId, setProductId] = useState(0);
   const [apiKey, setApiKey] = useState('');
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiMHg3NDc2NDk0YWFkODBhNTA0MTczMzY0ZThlZDBiYzFjNjViZDg2NjBiIiwiaWF0IjoxNzAzNDg2MzcxLCJleHAiOjE3MDM1ODYzNzF9._aDmHaLCPvTQt8w6ZBI_CA-EISCJ0wg-RZqDvKXbXGM"; 
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiMHg3NDc2NDk0YWFkODBhNTA0MTczMzY0ZThlZDBiYzFjNjViZDg2NjBiIiwiaWF0IjoxNzAzNjI5NTM2LCJleHAiOjE4MDM2Mjk1MzZ9.8u5vaQmT4CU-JEsCZqpOvCNTDIfYeg0qz8zVK5G-Vis"; 
 
   const productHandler = async () => {
     const productData = {
@@ -33,6 +33,8 @@ export default function Home() {
         incentiveTokenAmountPerTx: 0.1
       }]
     };
+
+    console.log(productData);
 
     try {
       const response = await axios.post('http://localhost:8000/product', productData, {
