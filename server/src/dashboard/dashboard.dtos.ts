@@ -37,6 +37,7 @@ export class ProductCard {
     cardType: CardType;
     cardData: {
         productName: string;
+        poolAddress: string;
         earned?: number;
         claimed?: number;
         eligibility?: boolean;

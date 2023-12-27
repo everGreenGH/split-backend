@@ -31,6 +31,7 @@ export class DashboardService {
                     cardType: CardType.AFFILIATE,
                     cardData: {
                         productName,
+                        poolAddress: productInfo.incentivePoolAddress,
                         earned: affiliateEarned,
                         claimed: affiliateClaimed,
                     },
@@ -41,6 +42,7 @@ export class DashboardService {
                     cardType: CardType.USER,
                     cardData: {
                         productName,
+                        poolAddress: productInfo.incentivePoolAddress,
                         eligibility: true, // FIXME: 트랜잭션 유효성 검사 넣은 후 수정
                         claimable: userEarned - userClaimed,
                     },
